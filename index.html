@@ -75,9 +75,9 @@
 
     <div id="fullMenu">
         <div class="close-btn" onclick="toggleMenu()">×</div>
-        <div id="userNameDisplay" style="color: var(--gold); font-size: 1.2rem; font-weight: 900; margin-bottom: 20px; text-align: center;"></div>
-        <div class="menu-item" id="loginBtn" onclick="handleGoogleLogin()">GOOGLE LOGIN</div>
-        <div class="menu-item" id="logoutBtn" onclick="handleLogout()" style="display:none; color: #ff3b30;">LOGOUT</div>
+        <div id="userNameDisplay" style="color: var(--gold); font-size: 1.2rem; font-weight: 900; margin-bottom: 20px; text-align: center; text-transform: uppercase;"></div>
+        <div class="menu-item" id="loginBtn" onclick="handleGoogleLogin()"><i class="fab fa-google"></i> GOOGLE LOGIN</div>
+        <div class="menu-item" id="logoutBtn" onclick="handleLogout()" style="display:none; color: #ff3b30;"><i class="fas fa-sign-out-alt"></i> LOGOUT</div>
         <div class="menu-item" onclick="openSurahs()">🎧 LISTEN SURAH</div>
         <div class="menu-item" onclick="openQuiz()">🧠 ISLAMIC QUIZ</div>
         <a href="#names" class="menu-item" onclick="toggleMenu()">99 NAMES</a>
@@ -141,7 +141,51 @@
     </footer>
 
     <script>
-        // 1. DATA POOLS
+        // 1. FIREBASE CONFIGURATION (INTEGRATED FROM YOUR PROVIDED ID)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCUQblrFn3RHyy4sxqhA2Hz7Nq4gYosZT0",
+            authDomain: "al-alsa.firebaseapp.com",
+            projectId: "al-alsa",
+            storageBucket: "al-alsa.firebasestorage.app",
+            messagingSenderId: "511589143545",
+            appId: "1:511589143545:web:a3d4f7ec90afbda4cf2328",
+            measurementId: "G-JL8FD6D6FF"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // AUTH FUNCTIONS
+        function handleGoogleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => {
+                updateUI(result.user);
+            }).catch(err => alert("Login Error: " + err.message));
+        }
+
+        function handleLogout() {
+            auth.signOut().then(() => updateUI(null));
+        }
+
+        function updateUI(user) {
+            const nameEl = document.getElementById('userNameDisplay');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            if (user) {
+                nameEl.innerText = "SALAM, " + user.displayName;
+                loginBtn.style.display = "none";
+                logoutBtn.style.display = "block";
+            } else {
+                nameEl.innerText = "";
+                loginBtn.style.display = "block";
+                logoutBtn.style.display = "none";
+            }
+        }
+
+        auth.onAuthStateChanged(updateUI);
+
+        // 2. DATA POOLS
         const surahNames = ["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf"];
         
         const quizBank = [
@@ -165,7 +209,6 @@
             {q:"How many Prophets are mentioned in Quran?", a:["100","25","50"], c:1},
             {q:"Wife of Ibrahim (AS) and mother of Ismail (AS)?", a:["Sarah","Hajar","Asiya"], c:1},
             {q:"Battle where Muslims were outnumbered 3:1?", a:["Badr","Uhud","Khandaq"], c:0},
-            // ... adding conceptual items to reach 50
             {q:"First word revealed of the Quran?", a:["Islam","Iqra","Salam"], c:1},
             {q:"Which Prophet built the Ark?", a:["Nuh (AS)","Hud (AS)","Salih (AS)"], c:0},
             {q:"The Prophet's migration to Madinah is?", a:["Hajj","Hijrah","Umrah"], c:1},
@@ -201,40 +244,38 @@
         const wisdoms = [
             "Indeed, with hardship comes ease (94:6).", "The best among you are those who learn the Quran and teach it.", "So remember Me; I will remember you (2:152).", "A smile is charity.", "Allah does not burden a soul beyond that it can bear.", "Kindness is a mark of faith.", "The strong is not the one who overcomes people, but the one who controls his anger.", "Trust in Allah, but tie your camel.", "Allah loves those who turn to Him in repentance.", "Speak a good word or remain silent.",
             "Forgive others as you would like Allah to forgive you.", "Your only limit is your soul.", "He who has no mercy will receive no mercy.", "Prayer is better than sleep.", "Truthfulness leads to righteousness.", "Modesty is part of faith.", "Allah is beautiful and loves beauty.", "Upper hand is better than the lower hand (giving vs receiving).", "Be in this world as a stranger or a traveler.", "Righteousness is good character.",
-            "Avoid jealousy, for it eats up good deeds.", "The best Jihad is to speak truth to a tyrant.", "Cleanliness is half of faith.", "Every act of kindness is charity.", "Allah is with the patient (2:153).", "Fear Allah wherever you are.", "Riches are not from abundance of goods but from a contented mind.", "Follow a bad deed with a good one to wipe it out.", "Paradise lies at the feet of mothers.", "A father gives his child nothing better than good manners.",
-            // ... (I will cycle these to 100 in the UI generation loop)
+            "Avoid jealousy, for it eats up good deeds.", "The best Jihad is to speak truth to a tyrant.", "Cleanliness is half of faith.", "Every act of kindness is charity.", "Allah is with the patient (2:153).", "Fear Allah wherever you are.", "Riches are not from abundance of goods but from a contented mind.", "Follow a bad deed with a good one to wipe it out.", "Paradise lies at the feet of mothers.", "A father gives his child nothing better than good manners."
         ];
 
-        // 2. CORE LOGIC
-        let user = JSON.parse(localStorage.getItem('alsa_v8')) || { 
+        // 3. LOGIC
+        let userData = JSON.parse(localStorage.getItem('alsa_v9')) || { 
             coins: 0, 
             lastClaimDate: "", 
             claimedSalah: [] 
         };
 
         function save() { 
-            localStorage.setItem('alsa_v8', JSON.stringify(user));
-            document.getElementById('coinCount').innerText = user.coins;
+            localStorage.setItem('alsa_v9', JSON.stringify(userData));
+            document.getElementById('coinCount').innerText = userData.coins;
         }
 
         function checkDailyReset() {
             const today = new Date().toDateString();
-            if (user.lastClaimDate !== today) {
-                user.lastClaimDate = today;
-                user.claimedSalah = [];
+            if (userData.lastClaimDate !== today) {
+                userData.lastClaimDate = today;
+                userData.claimedSalah = [];
                 save();
             }
-            // Update UI
             document.querySelectorAll('.mission-btn').forEach(btn => {
                 const id = btn.id.split('-')[1];
-                if(user.claimedSalah.includes(id)) btn.classList.add('done');
+                if(userData.claimedSalah.includes(id)) btn.classList.add('done');
             });
         }
 
         function completeSalah(id, btn) {
-            if(user.claimedSalah.includes(id)) return;
-            user.coins += 1;
-            user.claimedSalah.push(id);
+            if(userData.claimedSalah.includes(id)) return;
+            userData.coins += 1;
+            userData.claimedSalah.push(id);
             btn.classList.add('done');
             showCoinAnimation();
             save();
@@ -247,11 +288,9 @@
             el.classList.add('animate-coin');
         }
 
-        // 3. UI GENERATION
         window.onload = () => {
             checkDailyReset();
             
-            // Generate Surahs
             const sList = document.getElementById('surahList');
             for(let i=1; i<=50; i++) {
                 let id = i.toString().padStart(3, '0');
@@ -266,14 +305,12 @@
                 </div>`;
             }
 
-            // Generate Wisdoms (100 items)
             const qList = document.getElementById('quoteList');
             for(let i=1; i<=100; i++) {
                 let text = wisdoms[(i-1) % wisdoms.length];
                 qList.innerHTML += `<div class="q-card"><p>"${text}"</p><span>— Wisdom #${i}</span></div>`;
             }
 
-            // Generate Names
             const nGrid = document.getElementById('namesGrid');
             const sampleNames = [{ar:"الله", en:"ALLAH"}, {ar:"الرحمن", en:"AR-RAHMAN"}, {ar:"الرحيم", en:"AR-RAHIM"}];
             for(let i=1; i<=99; i++) {
@@ -285,7 +322,6 @@
             setInterval(updateTimers, 60000);
         };
 
-        // 4. QUIZ LOGIC
         function loadNewQuestion() {
             const rand = quizBank[Math.floor(Math.random() * quizBank.length)];
             document.getElementById('questionText').innerText = rand.q;
@@ -300,7 +336,7 @@
             if(choice === correct) {
                 btn.style.background = "#34c759";
                 btn.style.color = "white";
-                user.coins += 1;
+                userData.coins += 1;
                 showCoinAnimation();
                 save();
                 setTimeout(loadNewQuestion, 800);
@@ -310,20 +346,6 @@
                 setTimeout(() => btn.style.background = "#f2f2f7", 500);
             }
         }
-
-        // 5. FIREBASE (Placeholder - ensure keys are correct in your version)
-        firebase.initializeApp(firebaseConfig);
-        function handleGoogleLogin() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider).then(res => updateUI(res.user));
-        }
-        function handleLogout() { firebase.auth().signOut().then(() => updateUI(null)); }
-        function updateUI(u) {
-            document.getElementById('userNameDisplay').innerText = u ? "SALAM, " + u.displayName : "";
-            document.getElementById('loginBtn').style.display = u ? "none" : "block";
-            document.getElementById('logoutBtn').style.display = u ? "block" : "none";
-        }
-        firebase.auth().onAuthStateChanged(updateUI);
 
         function toggleMenu() { let m = document.getElementById('fullMenu'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
         function openSurahs() { toggleMenu(); document.getElementById('surahPanel').style.display = 'block'; }
