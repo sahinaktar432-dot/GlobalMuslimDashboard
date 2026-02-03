@@ -27,7 +27,6 @@
             background: var(--emerald); z-index: 5000; display: none; flex-direction: column;
             overflow-y: auto; padding: 40px 20px;
         }
-        .user-display { color: var(--gold); font-size: 1rem; font-weight: 900; text-align: center; margin-bottom: 20px; text-transform: uppercase; border-bottom: 1px solid rgba(197, 160, 33, 0.3); padding-bottom: 15px; }
         .menu-item { color: white; text-decoration: none; font-size: 1.8rem; margin: 15px 0; font-weight: 900; cursor: pointer; text-align: center; }
         .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 2.5rem; cursor: pointer; z-index: 6000; }
 
@@ -90,8 +89,12 @@
 
     <div id="fullMenu">
         <div class="close-btn" onclick="toggleMenu()">×</div>
-        <div id="userName" class="user-display">Guest Mode</div>
+        
+        <div id="userNameDisplay" style="color: var(--gold); font-size: 1.2rem; font-weight: 900; margin-bottom: 20px; text-align: center; text-transform: uppercase;"></div>
+        
         <div class="menu-item" id="loginBtn" onclick="handleGoogleLogin()"><i class="fab fa-google"></i> GOOGLE LOGIN</div>
+        <div class="menu-item" id="logoutBtn" onclick="handleLogout()" style="display:none; color: #ff3b30; font-size: 1.3rem;"><i class="fas fa-sign-out-alt"></i> LOGOUT</div>
+        
         <div class="menu-item" onclick="openSurahs()">🎧 LISTEN SURAH</div>
         <div class="menu-item" onclick="openQuiz()">🧠 PLAY ISLAMIC QUIZ</div>
         <a href="#names" class="menu-item" onclick="toggleMenu()">99 NAMES</a>
@@ -123,6 +126,7 @@
     </div>
 
     <div class="container">
+        
         <section>
             <h2>The Visionary</h2>
             <p style="font-size: 1rem; font-weight: 700; color: #333;">I am <b>Shahin Aktar</b>, a 17-year-old creator. <b>Al-Alsa</b> is a professional hub designed to unite the Ummah through discipline and technology.</p>
@@ -147,6 +151,7 @@
             <h2>100 Wisdoms & Verses</h2>
             <div class="quote-scroll" id="quoteList"></div>
         </section>
+
     </div>
 
     <footer style="text-align: center; padding: 40px 20px;">
@@ -174,17 +179,43 @@
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
 
+        // Updated Auth Functions
         function handleGoogleLogin() {
             auth.signInWithPopup(provider).then((result) => {
-                const user = result.user;
-                // Update Menu with Name
-                document.getElementById('userName').innerText = "Logged in as: " + user.displayName;
-                document.getElementById('loginBtn').innerHTML = '<i class="fas fa-check-circle"></i> ACCOUNT LINKED';
-                alert("Assalamu Alaikum, " + user.displayName);
-            }).catch(err => alert("Please ensure you clicked SAVE in Firebase Console settings."));
+                updateUI(result.user);
+                alert("Assalamu Alaikum, " + result.user.displayName);
+            }).catch(err => alert("Login Error: " + err.message));
         }
 
-        // --- THE REST OF YOUR LOGIC (UNCHANGED) ---
+        function handleLogout() {
+            auth.signOut().then(() => {
+                updateUI(null);
+                alert("Signed out successfully.");
+            });
+        }
+
+        function updateUI(user) {
+            const nameEl = document.getElementById('userNameDisplay');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            if (user) {
+                nameEl.innerText = "Welcome, " + user.displayName;
+                loginBtn.style.display = "none";
+                logoutBtn.style.display = "block";
+            } else {
+                nameEl.innerText = "";
+                loginBtn.style.display = "block";
+                logoutBtn.style.display = "none";
+            }
+        }
+
+        // Check auth status on load
+        auth.onAuthStateChanged((user) => {
+            updateUI(user);
+        });
+
+        // 2. APP LOGIC
         let userData = JSON.parse(localStorage.getItem('alsa_v7')) || { coins: 0 };
         document.getElementById('coinCount').innerText = userData.coins;
 
