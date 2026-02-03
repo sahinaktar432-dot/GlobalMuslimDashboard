@@ -8,8 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
@@ -94,9 +94,12 @@
     <div id="fullMenu">
         <div class="close-btn" onclick="toggleMenu()">×</div>
         <div id="userNameDisplay" style="color: var(--gold); font-size: 1rem; font-weight: 900; text-align: center; margin-bottom: 30px;"></div>
+        
         <div class="menu-item" id="loginBtn" onclick="handleGoogleLogin()"><i class="fab fa-google"></i> Google Login</div>
+        
         <div class="menu-item" onclick="openSurahs()"><i class="fas fa-headphones"></i> Listen Quran</div>
         <div class="menu-item" onclick="openQuiz()"><i class="fas fa-brain"></i> Islamic Quiz</div>
+        
         <div class="menu-item" id="logoutBtn" onclick="handleLogout()" style="display:none; color: #ff3b30; margin-top: 40px; font-size: 1.2rem;"><i class="fas fa-power-off"></i> Logout</div>
     </div>
 
@@ -151,8 +154,60 @@
     </div>
 
     <script>
+        // --- 1. FIREBASE CONFIGURATION (Must replace with YOUR keys for Login to work) ---
+        // Instructions: Go to Firebase Console > Project Settings > General > SDK Setup > CDN
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        // Login Logic
+        function handleGoogleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    updateUI(user);
+                    aiResponse("Welcome back, " + user.displayName);
+                }).catch((error) => {
+                    console.error("Login Failed:", error);
+                    alert("Login failed: Check Firebase Console configuration.");
+                });
+        }
+
+        function handleLogout() {
+            firebase.auth().signOut().then(() => {
+                updateUI(null);
+                aiResponse("Logged out successfully.");
+            });
+        }
+
+        function updateUI(user) {
+            const nameDisplay = document.getElementById('userNameDisplay');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            if (user) {
+                nameDisplay.innerText = "Salam, " + user.displayName;
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+            } else {
+                nameDisplay.innerText = "";
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+            }
+        }
+
         // --- DATA ---
-        // Expanded to 99 Unique items
         const ALLAH_NAMES = [
             ["الله","Allah"],["الرحمن","Ar-Rahman"],["الرحيم","Ar-Rahim"],["الملك","Al-Malik"],["القدوس","Al-Quddus"],["السلام","As-Salam"],["المؤمن","Al-Mu'min"],["المهيمن","Al-Muhaymin"],["العزيز","Al-Aziz"],["الجبار","Al-Jabbar"],["المتكبر","Al-Mutakabbir"],["الخالق","Al-Khaliq"],["البارئ","Al-Bari"],["المصور","Al-Musawwir"],["الغفار","Al-Ghaffar"],["القهار","Al-Qahhar"],["الوهاب","Al-Wahhab"],["الرزاق","Ar-Razzaq"],["الفتاح","Al-Fattah"],["العليم","Al-Alim"],
             ["القابض","Al-Qabid"],["الباسط","Al-Basit"],["الخافض","Al-Khafid"],["الرافع","Ar-Rafi"],["المعز","Al-Mu'izz"],["المذل","Al-Mudhill"],["السميع","As-Sami"],["البصير","Al-Basir"],["الحكيم","Al-Hakim"],["العدل","Al-Adl"],["اللطيف","Al-Latif"],["الخبير","Al-Khabir"],["الحليم","Al-Halim"],["العظيم","Al-Azim"],["الغفور","Al-Ghafoor"],["الشكور","Ash-Shakur"],["العلي","Al-Ali"],["الكبير","Al-Kabir"],["الحفيظ","Al-Hafiz"],["المقيت","Al-Muqit"],
@@ -161,7 +216,6 @@
             ["التواب","At-Tawwab"],["المنتقم","Al-Muntaqim"],["العفو","Al-Afu"],["الرؤوف","Ar-Ra'uf"],["مالك الملك","Malik-ul-Mulk"],["ذو الجلال والإكرام","Zul-Jalal-wal-Ikram"],["المقسط","Al-Muqsit"],["الجامع","Al-Jami"],["الغني","Al-Ghani"],["المغني","Al-Mughni"],["المانع","Al-Mani"],["الضار","Ad-Darr"],["النافع","An-Nafi"],["النور","An-Nur"],["الهادي","Al-Hadi"],["البديع","Al-Badi"],["الباقي","Al-Baqi"],["الوارث","Al-Warith"],["الرشيد","Ar-Rashid"],["الصبور","As-Sabur"]
         ];
 
-        // 100 UNIQUE WISDOMS
         const WISDOMS = [
             "Actions are judged by intentions.", "The best of you are those who learn the Quran and teach it.", "Patience is a pillar of faith.", "Kindness is a mark of faith.", "Speak a good word or remain silent.", "A smile is charity.", "Cleanliness is half of faith.", "Paradise lies at the feet of mothers.", "Do not get angry.", "God is with the patient.",
             "Trust in Allah, but tie your camel.", "The strong man is not the wrestler, but the one who controls his anger.", "Feed the hungry and visit the sick.", "Save yourself from Hellfire even with half a date.", "Richness is not having many possessions, but richness of soul.", "None of you truly believes until he loves for his brother what he loves for himself.", "Seek knowledge from the cradle to the grave.", "The ink of the scholar is more holy than the blood of the martyr.", "He who does not thank people, does not thank Allah.", "Allah is beautiful and loves beauty.",
@@ -187,33 +241,92 @@
         }
         setInterval(runTimers, 60000); runTimers();
 
+        // --- ENHANCED SHAHIN AI & MALE VOICE ---
         const synth = window.speechSynthesis;
+        let maleVoice = null;
+
+        // Ensure voices are loaded and select a Male one
+        function loadVoices() {
+            const voices = synth.getVoices();
+            // Try to find a voice with "Male" or specific names like "David", "Daniel"
+            maleVoice = voices.find(v => v.name.includes('Male') || v.name.includes('David') || v.name.includes('Daniel') || v.name.includes('Google US English'));
+            if(!maleVoice && voices.length > 0) maleVoice = voices[0]; // Fallback
+        }
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
         function aiResponse(text) {
             const status = document.getElementById('ai-status');
             status.style.display = 'block';
-            status.innerHTML = `<span style="color:var(--ai-green); font-size:0.7rem;">SHAHIN AI RESPONDING...</span><br>${text}`;
+            status.innerHTML = `<span style="color:var(--ai-green); font-size:0.7rem;">SHAHIN AI IS SPEAKING...</span><br>${text}`;
+            
+            // Stop any previous speech
+            synth.cancel();
+
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.pitch = 1; utterance.rate = 1;
+            if (maleVoice) utterance.voice = maleVoice;
+            utterance.pitch = 0.9; // Slightly deeper for male effect
+            utterance.rate = 1;
+            
             synth.speak(utterance);
-            setTimeout(() => status.style.display = 'none', 6000);
+            // Hide status after speech (rough estimate: 100ms per character)
+            setTimeout(() => status.style.display = 'none', Math.max(4000, text.length * 80));
         }
 
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+
         function startVoiceAI() {
-            recognition.start();
-            const s = document.getElementById('ai-status');
-            s.style.display = 'block'; s.innerText = "I'm listening, Shahin...";
+            const status = document.getElementById('ai-status');
+            status.style.display = 'block'; 
+            status.innerText = "Listening... Ask me about Islam, Salah, Prophets, or Say 'Open Quiz'.";
+            
+            try {
+                recognition.start();
+            } catch(e) {
+                console.log("Mic already active or not supported");
+            }
         }
 
         recognition.onresult = (e) => {
             const cmd = e.results[0][0].transcript.toLowerCase();
-            if(cmd.includes("surah") || cmd.includes("quran")) { aiResponse("Opening the Quran player for you."); openSurahs(); }
-            else if(cmd.includes("quiz")) { aiResponse("Starting the Islamic quiz. Good luck!"); openQuiz(); }
-            else if(cmd.includes("who are you")) { aiResponse("I am Shahin AI, the digital brain of Al Alsa, built by Shahin Aktar."); }
-            else aiResponse("I understood: " + cmd + ". Try saying 'Open Quran' or 'Start Quiz'.");
+            const status = document.getElementById('ai-status');
+            status.innerHTML = `You said: "${cmd}"`;
+
+            // ISLAMIC KNOWLEDGE BASE (Simulation)
+            if(cmd.includes("surah") || cmd.includes("quran")) { 
+                aiResponse("Opening the Holy Quran player for you."); openSurahs(); 
+            }
+            else if(cmd.includes("quiz")) { 
+                aiResponse("Starting the Islamic quiz. Let's test your knowledge!"); openQuiz(); 
+            }
+            else if(cmd.includes("who are you")) { 
+                aiResponse("I am Shahin AI, the digital companion for the Ummah, created by Shahin Aktar."); 
+            }
+            // --- Expanded Islamic Q&A ---
+            else if(cmd.includes("allah")) { aiResponse("Allah is the One and Only God, the Creator and Sustainer of the universe."); }
+            else if(cmd.includes("prophet") || cmd.includes("muhammad")) { aiResponse("Prophet Muhammad (PBUH) is the last messenger of Allah and the seal of the prophets."); }
+            else if(cmd.includes("pillar")) { aiResponse("The five pillars of Islam are: Shahada (Faith), Salah (Prayer), Zakat (Charity), Sawm (Fasting), and Hajj (Pilgrimage)."); }
+            else if(cmd.includes("salah") || cmd.includes("prayer")) { aiResponse("Salah is the second pillar of Islam. Muslims pray five times a day: Fajr, Dhuhr, Asr, Maghrib, and Isha."); }
+            else if(cmd.includes("zakat") || cmd.includes("charity")) { aiResponse("Zakat is the third pillar, requiring Muslims to give 2.5% of their qualifying wealth to the poor."); }
+            else if(cmd.includes("ramadan") || cmd.includes("fasting")) { aiResponse("Ramadan is the 9th month of the Hijri calendar, where fasting is obligatory from dawn to sunset."); }
+            else if(cmd.includes("hajj")) { aiResponse("Hajj is the pilgrimage to Mecca that every able-bodied Muslim must perform at least once."); }
+            else if(cmd.includes("quran book")) { aiResponse("The Quran is the holy book of Islam, revealed to Prophet Muhammad (PBUH) by Angel Jibreel."); }
+            else if(cmd.includes("wudu") || cmd.includes("ablution")) { aiResponse("Wudu is the ritual washing performed before prayer. It involves washing the face, hands, head, and feet."); }
+            else if(cmd.includes("hijab")) { aiResponse("Hijab is a veil worn by Muslim women in the presence of males outside of their immediate family, representing modesty."); }
+            else if(cmd.includes("greeting")) { aiResponse("The Islamic greeting is 'As-salamu alaykum', meaning 'Peace be upon you'."); }
+            else { 
+                aiResponse("I heard: " + cmd + ". My knowledge is growing. Try asking about the 5 Pillars, Prophets, or say 'Open Quran'."); 
+            }
+        };
+
+        recognition.onerror = (e) => {
+            document.getElementById('ai-status').innerText = "Error: Could not hear you. Check microphone.";
         };
 
         window.onload = () => {
+            loadVoices(); // Load voices immediately
             checkDailyReset();
 
             // Fill 99 Names
@@ -248,14 +361,12 @@
         document.getElementById('coinCount').innerText = appData.coins;
 
         function checkDailyReset() {
-            const today = new Date().toDateString(); // e.g. "Mon Feb 03 2026"
+            const today = new Date().toDateString();
             if (appData.date !== today) {
-                // New Day: Reset claimed missions
                 appData.date = today;
                 appData.claimed = []; 
                 save();
             }
-            // Restore button states
             appData.claimed.forEach(id => {
                 const btn = document.getElementById('btn-' + id);
                 if(btn) btn.classList.add('done');
@@ -268,24 +379,73 @@
         function openQuiz() { toggleMenu(); document.getElementById('quizPanel').style.display = 'flex'; nextQ(); }
         function closeQuiz() { document.getElementById('quizPanel').style.display = 'none'; }
 
+        // --- 50 UNIQUE ISLAMIC QUIZ QUESTIONS ---
+        const QUIZ_DATA = [
+            {q:"Who is the first Prophet in Islam?", a:["Adam (AS)","Nuh (AS)","Musa (AS)"], c:0},
+            {q:"What is the holy book of Muslims?", a:["Torah","Bible","Quran"], c:2},
+            {q:"How many prayers are obligatory daily?", a:["3","5","7"], c:1},
+            {q:"Which month do Muslims fast in?", a:["Shawwal","Ramadan","Muharram"], c:1},
+            {q:"Where is the Kaaba located?", a:["Madinah","Jerusalem","Mecca"], c:2},
+            {q:"Who was the last Prophet?", a:["Isa (AS)","Muhammad (PBUH)","Ibrahim (AS)"], c:1},
+            {q:"What is the first pillar of Islam?", a:["Salah","Shahada","Zakat"], c:1},
+            {q:"Which angel brought the revelation?", a:["Mikael","Israfil","Jibreel"], c:2},
+            {q:"Which Surah is the Heart of the Quran?", a:["Al-Fatiha","Ya-Sin","Al-Baqarah"], c:1},
+            {q:"How many surahs are in the Quran?", a:["114","110","120"], c:0},
+            {q:"What is the night of power called?", a:["Laylatul Qadr","Laylatul Miraj","Laylatul Raghaib"], c:0},
+            {q:"Which prophet built the Ark?", a:["Nuh (AS)","Hud (AS)","Salih (AS)"], c:0},
+            {q:"Which prophet was swallowed by a whale?", a:["Yusuf (AS)","Yunus (AS)","Musa (AS)"], c:1},
+            {q:"What is the washing before prayer called?", a:["Ghusl","Tayammum","Wudu"], c:2},
+            {q:"Which prayer has no Ruku or Sujood?", a:["Janazah","Eid","Taraweeh"], c:0},
+            {q:"Who was the first Caliph?", a:["Umar (RA)","Ali (RA)","Abu Bakr (RA)"], c:2},
+            {q:"Which prophet spoke as a baby?", a:["Isa (AS)","Yahya (AS)","Musa (AS)"], c:0},
+            {q:"What is the direction of prayer?", a:["Qibla","East","West"], c:0},
+            {q:"Which Surah has no Bismillah?", a:["Al-Anfal","At-Tawbah","Yunus"], c:1},
+            {q:"What is the minor pilgrimage called?", a:["Hajj","Ziyarah","Umrah"], c:2},
+            {q:"Which Prophet is called Khalilullah?", a:["Musa (AS)","Ibrahim (AS)","Isa (AS)"], c:1},
+            {q:"Where did the Prophet (PBUH) migrate to?", a:["Taif","Madinah","Abyssinia"], c:1},
+            {q:"What is the charity given yearly called?", a:["Sadaqah","Zakat","Waqf"], c:1},
+            {q:"How many gates does Jannah have?", a:["7","8","9"], c:1},
+            {q:"Which wife of the Prophet was a businesswoman?", a:["Aisha (RA)","Khadijah (RA)","Hafsa (RA)"], c:1},
+            {q:"Which battle was the first in Islam?", a:["Uhud","Khandaq","Badr"], c:2},
+            {q:"Which prayer is at dawn?", a:["Fajr","Dhuhr","Isha"], c:0},
+            {q:"Which prayer is at sunset?", a:["Asr","Maghrib","Isha"], c:1},
+            {q:"Who is the Angel of Death?", a:["Malik","Azrael","Ridwan"], c:1},
+            {q:"What is the food for breaking fast called?", a:["Suhoor","Iftar","Dinner"], c:1},
+            {q:"Which surah equals 1/3 of Quran?", a:["Al-Ikhlas","Al-Falaq","An-Nas"], c:0},
+            {q:"Who built the Kaaba originally?", a:["Adam (AS)","Ibrahim (AS)","Nuh (AS)"], c:0},
+            {q:"Which prophet could control wind?", a:["Sulaiman (AS)","Dawud (AS)","Musa (AS)"], c:0},
+            {q:"Which prophet was thrown in fire?", a:["Yusuf (AS)","Ibrahim (AS)","Lut (AS)"], c:1},
+            {q:"What is the bridge over Hellfire called?", a:["Sirat","Barzakh","Arafat"], c:0},
+            {q:"Who is the keeper of Paradise?", a:["Malik","Ridwan","Munkar"], c:1},
+            {q:"Who is the keeper of Hellfire?", a:["Malik","Ridwan","Nakir"], c:0},
+            {q:"Which prophet had the most patience?", a:["Ayyub (AS)","Yaqub (AS)","Yusuf (AS)"], c:0},
+            {q:"What is the dry ablution called?", a:["Wudu","Ghusl","Tayammum"], c:2},
+            {q:"Which prophet was a king?", a:["Sulaiman (AS)","Isa (AS)","Idris (AS)"], c:0},
+            {q:"Which bird spoke to Sulaiman (AS)?", a:["Crow","Hoopoe (Hudhud)","Eagle"], c:1},
+            {q:"Who was the first martyr in Islam?", a:["Sumayyah (RA)","Hamza (RA)","Bilal (RA)"], c:0},
+            {q:"Which prayer is performed on Friday?", a:["Jummah","Eid","Taraweeh"], c:0},
+            {q:"How many years did the revelation take?", a:["10","13","23"], c:2},
+            {q:"Which Prophet split the sea?", a:["Musa (AS)","Isa (AS)","Nuh (AS)"], c:0},
+            {q:"Which Prophet split the moon?", a:["Musa (AS)","Muhammad (PBUH)","Ibrahim (AS)"], c:1},
+            {q:"Who is the mother of Isa (AS)?", a:["Maryam (AS)","Asiya (AS)","Hajar (AS)"], c:0},
+            {q:"Which animal accompanied the Sleepers of Cave?", a:["Cat","Dog","Horse"], c:1},
+            {q:"What is the sin that is not forgiven?", a:["Shirk","Theft","Lying"], c:0},
+            {q:"What is the holiest city?", a:["Mecca","Madinah","Jerusalem"], c:0}
+        ];
+
         function nextQ() {
-            const questions = [{q:"Which Prophet built the Ark?", a:["Nuh (AS)","Ibrahim (AS)"], c:0}, {q:"What is the first month of Hijri?", a:["Ramadan","Muharram"], c:1}];
-            const q = questions[Math.floor(Math.random()*questions.length)];
+            const q = QUIZ_DATA[Math.floor(Math.random()*QUIZ_DATA.length)];
             document.getElementById('questionText').innerText = q.q;
             document.getElementById('optionsContainer').innerHTML = q.a.map((opt,i)=>`<button class="mission-btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.3);" onclick="ans(${i},${q.c},this)">${opt}</button>`).join('');
         }
 
         function ans(i,c,btn) {
-            // Quiz coins are unlimited
             if(i===c) { btn.style.background="#34c759"; appData.coins+=5; save(); setTimeout(nextQ, 800); }
             else btn.style.background="#ff3b30";
         }
 
-        // Modified Complete Function for Daily Reset
         function complete(btn, prayerId) { 
-            // Check if already claimed today
             if(appData.claimed.includes(prayerId)) return;
-
             btn.classList.add('done'); 
             appData.coins += 10; 
             appData.claimed.push(prayerId);
