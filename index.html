@@ -3,62 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AL-ALSA | Global Muslim Dashboard</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <title>AL-ALSA | Original Blue Design</title>
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <style>
-        :root { --gold: #D4AF37; --bg: #0a0a0a; --card: #1a1a1a; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; }
-        
-        /* Top Navigation */
-        .nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; }
-        .stats { background: var(--card); padding: 10px 20px; border-radius: 50px; border: 1px solid var(--gold); }
-
-        /* Grid Layout */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-        .name-box { background: var(--card); padding: 20px; border-radius: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
-        .name-box .ar { display: block; font-size: 24px; margin-bottom: 5px; color: var(--gold); }
-        
-        /* Menu Overlay */
-        #fullMenu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
-        .menu-item { padding: 20px; font-size: 20px; color: var(--gold); cursor: pointer; text-transform: uppercase; }
-        
-        /* Utility Panels */
-        .panel { display: none; position: fixed; top: 10%; left: 5%; width: 90%; height: 80%; background: var(--card); z-index: 2000; padding: 20px; overflow-y: auto; border-radius: 20px; border: 2px solid var(--gold); }
-        .close-btn { color: var(--gold); float: right; font-size: 30px; cursor: pointer; }
+        /* YOUR ORIGINAL BLUE STYLING */
+        body { font-family: sans-serif; margin: 0; background: #f4f4f4; }
+        .header { background: #0044cc; color: white; padding: 20px; text-align: center; }
+        .coin-box { font-size: 24px; font-weight: bold; margin: 10px; color: #0044cc; text-align: center; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .item-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+        .login-btn { background: #db4437; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="nav">
-        <div class="logo">AL-ALSA</div>
-        <div class="stats">Wealth: <span id="coinCount">0</span> 🪙</div>
-        <i class="fas fa-ellipsis-v" style="color:var(--gold); cursor:pointer;" onclick="toggleMenu()"></i>
+    <div class="header">
+        <h1>AL-ALSA</h1>
+        <button class="login-btn" onclick="handleGoogleLogin()">Login with Google</button>
     </div>
 
-    <div class="grid" id="namesGrid"></div>
+    <div class="coin-box">Wealth: <span id="coinCount">0</span> 🪙</div>
 
-    <div id="fullMenu">
-        <div class="close-btn" onclick="toggleMenu()" style="position:absolute; top:20px; right:30px;">&times;</div>
-        <div class="menu-item" onclick="handleGoogleLogin()"><i class="fab fa-google"></i> Google Login</div>
-        <div class="menu-item" onclick="openQuiz()">Islamic Quiz</div>
-        <div class="menu-item" onclick="alert('Coming Soon!')">Zakat Calculator</div>
-    </div>
-
-    <div id="quizPanel" class="panel">
-        <div class="close-btn" onclick="closeQuiz()">&times;</div>
-        <h2 id="questionText">Loading Question...</h2>
-        <div id="optionsContainer"></div>
-    </div>
+    <div class="grid-container" id="namesGrid">
+        </div>
 
     <script>
-        // 1. YOUR FIREBASE CONFIG (Successfully connected)
+        // YOUR FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyCUQblrFn3RHyy4sxqhA2Hz7Nq4gYosZT0",
             authDomain: "al-alsa.firebaseapp.com",
@@ -73,38 +46,18 @@
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
 
-        // 2. APP STATE
-        let coins = parseInt(localStorage.getItem('alsa_coins')) || 0;
-        document.getElementById('coinCount').innerText = coins;
-
-        // 3. GOOGLE LOGIN LOGIC
         function handleGoogleLogin() {
             auth.signInWithPopup(provider).then((result) => {
                 alert("Welcome " + result.user.displayName);
-                document.querySelector('.logo').innerText = result.user.displayName.toUpperCase();
-                toggleMenu();
-            }).catch(err => alert("Login Error: Enable Google in Firebase Console"));
+                document.getElementById('coinCount').innerText = "100"; // Bonus for logging in
+            }).catch(err => alert("Error: Make sure you clicked SAVE in Firebase Console"));
         }
 
-        // 4. UI FUNCTIONS
-        function toggleMenu() { 
-            const m = document.getElementById('fullMenu');
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; 
-        }
-
-        function openQuiz() { toggleMenu(); document.getElementById('quizPanel').style.display = 'block'; }
-        function closeQuiz() { document.getElementById('quizPanel').style.display = 'none'; }
-
-        // 5. AUTO-INJECT DATA
+        // Load 99 Names automatically
         window.onload = () => {
             const grid = document.getElementById('namesGrid');
-            const sampleNames = ["Ar-Rahman", "Ar-Rahim", "Al-Malik", "Al-Quddus"];
-            for(let i=0; i<99; i++) {
-                grid.innerHTML += `
-                    <div class="name-box">
-                        <span class="ar">الله</span>
-                        <span class="en">${sampleNames[i%4]}</span>
-                    </div>`;
+            for(let i=1; i<=99; i++) {
+                grid.innerHTML += `<div class="item-card"><b>Name #${i}</b><p>Allah</p></div>`;
             }
         };
     </script>
