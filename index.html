@@ -2,54 +2,164 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AL-ALSA | Full Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Al-Alsa | Global Ummah</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f0f2f5; }
-        .header { background: #0044cc; color: white; padding: 20px; text-align: center; position: relative; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        :root { --emerald: #043927; --gold: #c5a021; --bg: #f2f2f7; --white: #ffffff; }
         
-        /* Google Login Button in Top Corner */
-        .login-btn { position: absolute; top: 10px; right: 10px; background: #ffffff; color: #444; border: 1px solid #888; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: #121212; line-height: 1.25; }
+
+        /* --- Navigation --- */
+        nav { background: var(--emerald); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 900; font-size: 1.4rem; letter-spacing: -1.2px; color: var(--gold); }
+
+        /* --- Overlays --- */
+        #fullMenu, #surahPanel, #quizPanel {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--emerald); z-index: 5000; display: none; flex-direction: column;
+            overflow-y: auto; padding: 40px 20px;
+        }
+        .menu-item { color: white; text-decoration: none; font-size: 1.8rem; margin: 15px 0; font-weight: 900; cursor: pointer; text-align: center; }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 2.5rem; cursor: pointer; z-index: 6000; }
+
+        /* --- Hero --- */
+        .hero { background: linear-gradient(180deg, var(--emerald) 0%, #0a5c41 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
+        .timer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
+        .timer-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .timer-card b { font-size: 1.1rem; color: var(--gold); display: block; font-weight: 900; margin-top: 5px; }
+
+        /* --- Layout --- */
+        .container { padding: 20px; max-width: 650px; margin: 0 auto; margin-top: -30px; }
+        section { background: var(--white); padding: 25px; border-radius: 24px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+        h2 { font-size: 1.3rem; font-weight: 900; color: var(--emerald); margin-bottom: 15px; letter-spacing: -0.5px; }
+
+        /* --- 99 Names --- */
+        .names-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .name-box { background: #f8f9fa; padding: 12px; border-radius: 15px; border: 1px solid #eee; text-align: center; }
+        .name-box .ar { font-family: 'Amiri'; font-size: 1.4rem; color: var(--emerald); display: block; }
+        .name-box .en { font-size: 0.75rem; font-weight: 800; color: var(--gold); text-transform: uppercase; }
+
+        /* --- Quotes --- */
+        .quote-scroll { height: 350px; overflow-y: auto; padding-right: 5px; }
+        .q-card { padding: 15px 0; border-bottom: 1px solid #eee; }
+        .q-card p { font-size: 0.9rem; font-weight: 700; color: #333; margin-bottom: 5px; }
+        .q-card span { font-size: 0.75rem; color: var(--gold); font-weight: 800; }
+
+        /* --- Quiz & Animation --- */
+        .mission-btn, .quiz-opt { width: 100%; padding: 16px; margin-bottom: 10px; border-radius: 18px; border: none; background: #f2f2f7; font-weight: 900; color: var(--emerald); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .mission-btn.done { background: #34c759; color: white; }
+        .play-btn { background: var(--gold); color: #000; justify-content: center; font-size: 1.1rem; margin-top: 10px; }
         
-        .stats-bar { background: white; padding: 15px; display: flex; justify-content: space-around; font-weight: bold; color: #0044cc; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #coinFeedback {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 3rem; font-weight: 900; color: var(--gold);
+            z-index: 7000; pointer-events: none; opacity: 0;
+        }
+
+        .animate-coin { animation: coinPop 0.8s ease-out forwards; }
+        @keyframes coinPop {
+            0% { opacity: 0; transform: translate(-50%, 0); }
+            50% { opacity: 1; transform: translate(-50%, -100px); }
+            100% { opacity: 0; transform: translate(-50%, -150px); }
+        }
         
-        .countdown-box { background: #e7f0ff; margin: 15px; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #0044cc; }
-        
-        .section-title { padding: 10px 20px; color: #333; font-size: 20px; }
-        .scroll-container { display: flex; overflow-x: auto; padding: 10px; gap: 10px; }
-        .card { min-width: 150px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; border-bottom: 4px solid #0044cc; }
+        .surah-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin-bottom: 10px; color: white; }
+        audio { width: 100%; height: 35px; margin-top: 10px; filter: invert(1); }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <button class="login-btn" onclick="handleGoogleLogin()">Sign In</button>
-        <h1>AL-ALSA</h1>
-        <p>Global Muslim Dashboard</p>
+    <div id="coinFeedback">+1 🪙</div>
+
+    <nav>
+        <div class="logo">AL-ALSA</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="font-weight: 900; background: var(--gold); padding: 5px 12px; border-radius: 12px; font-size: 0.9rem;">🪙 <span id="coinCount">0</span></div>
+            <div onclick="toggleMenu()" style="color:white; cursor:pointer;"><i class="fas fa-bars-staggered" style="font-size: 1.5rem;"></i></div>
+        </div>
+    </nav>
+
+    <div id="fullMenu">
+        <div class="close-btn" onclick="toggleMenu()">×</div>
+        <div class="menu-item" onclick="handleGoogleLogin()"><i class="fab fa-google"></i> GOOGLE LOGIN</div>
+        <div class="menu-item" onclick="openSurahs()">🎧 LISTEN SURAH</div>
+        <div class="menu-item" onclick="openQuiz()">🧠 PLAY ISLAMIC QUIZ</div>
+        <a href="#names" class="menu-item" onclick="toggleMenu()">99 NAMES</a>
+        <a href="#quotes" class="menu-item" onclick="toggleMenu()">100 WISDOMS</a>
     </div>
 
-    <div class="stats-bar">
-        <div>Wealth: <span id="coinCount">0</span> 🪙</div>
-        <div>Rank: Beginner</div>
+    <div id="surahPanel">
+        <div class="close-btn" onclick="closeSurahs()">×</div>
+        <h2 style="color: var(--gold); text-align: center; margin-bottom: 20px;">Listen Surah</h2>
+        <div id="surahList"></div>
     </div>
 
-    <div class="countdown-box">
-        <h3 style="margin:0">⏳ Next Jummah In:</h3>
-        <p id="jummahTimer">Calculating...</p>
+    <div id="quizPanel">
+        <div class="close-btn" onclick="closeQuiz()">×</div>
+        <h2 style="color: var(--gold); text-align: center;">Islamic Quiz</h2>
+        <div id="quizContent" style="margin-top: 30px;">
+            <p id="questionText" style="color:white; font-size:1.3rem; font-weight:800; margin-bottom:20px; text-align:center;"></p>
+            <div id="optionsContainer"></div>
+        </div>
     </div>
 
-    <div class="section-title">99 Names of Allah</div>
-    <div class="scroll-container" id="namesGrid"></div>
+    <div class="hero">
+        <h1 style="font-family: 'Amiri'; font-size: 2.5rem; color: var(--gold);">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</h1>
+        <p style="font-weight: 900; text-transform: uppercase; letter-spacing: 1px;">Global Muslim Dashboard</p>
+        <div class="timer-row">
+            <div class="timer-card"><small>RAMADAN 2026</small><b id="ramadan">--d --h</b></div>
+            <div class="timer-card"><small>JUMMAH PRAYER</small><b id="jummah">--d --h</b></div>
+        </div>
+    </div>
 
-    <div class="section-title">100 Islamic Wisdoms</div>
-    <div class="scroll-container" id="wisdomsGrid"></div>
+    <div class="container">
+        
+        <section>
+            <h2>The Visionary</h2>
+            <p style="font-size: 1rem; font-weight: 700; color: #333;">I am <b>Shahin Aktar</b>, a 17-year-old creator. <b>Al-Alsa</b> is a professional hub designed to unite the Ummah through discipline and technology.</p>
+            <button class="mission-btn play-btn" onclick="openQuiz()">PLAY QUIZ NOW <i class="fas fa-play" style="margin-left:10px;"></i></button>
+        </section>
+
+        <section id="missions">
+            <h2>Salah Tracker</h2>
+            <button class="mission-btn" onclick="complete(this)">FAJR <span>+1 🪙</span></button>
+            <button class="mission-btn" onclick="complete(this)">DHUHR <span>+1 🪙</span></button>
+            <button class="mission-btn" onclick="complete(this)">ASR <span>+1 🪙</span></button>
+            <button class="mission-btn" onclick="complete(this)">MAGHRIB <span>+1 🪙</span></button>
+            <button class="mission-btn" onclick="complete(this)">ISHA <span>+1 🪙</span></button>
+        </section>
+
+        <section id="names">
+            <h2>99 Names of Allah</h2>
+            <div class="names-grid" id="namesGrid"></div>
+        </section>
+
+        <section id="quotes">
+            <h2>100 Wisdoms & Verses</h2>
+            <div class="quote-scroll" id="quoteList"></div>
+        </section>
+
+    </div>
+
+    <footer style="text-align: center; padding: 40px 20px;">
+        <h2 style="color:var(--emerald)">AL-ALSA</h2>
+        <div style="margin: 20px 0;">
+            <a href="mailto:business.aktar77@gmail.com" style="font-size: 2rem; color: var(--emerald); margin-right: 20px;"><i class="fas fa-envelope"></i></a>
+            <a href="https://www.linkedin.com/in/shahin-aktar-15b4a1272" style="font-size: 2rem; color: var(--emerald);"><i class="fab fa-linkedin"></i></a>
+        </div>
+        <p style="font-size: 0.8rem; font-weight: 800; opacity: 0.5;">SHAHIN AKTAR • 2026</p>
+    </footer>
 
     <script>
-        // 1. FIREBASE CONFIG
+        // 1. FIREBASE SETUP
         const firebaseConfig = {
             apiKey: "AIzaSyCUQblrFn3RHyy4sxqhA2Hz7Nq4gYosZT0",
             authDomain: "al-alsa.firebaseapp.com",
@@ -67,36 +177,122 @@
         function handleGoogleLogin() {
             auth.signInWithPopup(provider).then((result) => {
                 alert("Assalamu Alaikum, " + result.user.displayName);
-                document.querySelector('.login-btn').innerText = "Logged In";
-            }).catch(err => alert("Error: Please enable Google in Firebase Console"));
+                toggleMenu();
+            }).catch(err => alert("Please ensure you clicked SAVE in Firebase Console settings."));
         }
 
-        // 2. JUMMAH COUNTDOWN LOGIC
-        function updateJummah() {
-            const now = new Date();
-            const nextJummah = new Date();
-            nextJummah.setDate(now.getDate() + (5 - now.getDay() + 7) % 7);
-            nextJummah.setHours(13, 0, 0, 0);
-            
-            const diff = nextJummah - now;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            document.getElementById('jummahTimer').innerText = `${days} Days, ${hours} Hours`;
-        }
-        setInterval(updateJummah, 1000);
-        updateJummah();
+        // 2. APP LOGIC
+        let userData = JSON.parse(localStorage.getItem('alsa_v7')) || { coins: 0 };
+        document.getElementById('coinCount').innerText = userData.coins;
 
-        // 3. LOAD DATA
-        window.onload = () => {
-            const names = ["Ar-Rahman", "Ar-Rahim", "Al-Malik", "Al-Quddus", "As-Salam"];
-            const nGrid = document.getElementById('namesGrid');
-            names.forEach(n => {
-                nGrid.innerHTML += `<div class="card"><b>${n}</b></div>`;
+        const allahNamesFull = [
+            {ar:"الرحمن", en:"Ar-Rahman"}, {ar:"الرحيم", en:"Ar-Rahim"}, {ar:"الملك", en:"Al-Malik"}, {ar:"القدوس", en:"Al-Quddus"}, {ar:"السلام", en:"As-Salam"}, {ar:"المؤمن", en:"Al-Mu'min"}, {ar:"المهيمن", en:"Al-Muhaymin"}, {ar:"العزيز", en:"Al-Aziz"}, {ar:"الجبار", en:"Al-Jabbar"}, {ar:"المتكبر", en:"Al-Mutakabbir"}, {ar:"الخالق", en:"Al-Khaliq"}, {ar:"البارئ", en:"Al-Bari'"}, {ar:"المصور", en:"Al-Musawwir"}, {ar:"الغفار", en:"Al-Ghaffar"}, {ar:"القهار", en:"Al-Qahhar"}, {ar:"الوهاب", en:"Al-Wahhab"}, {ar:"الرزاق", en:"Ar-Razzaq"}, {ar:"الفتاح", en:"Al-Fattah"}, {ar:"العليم", en:"Al-Alim"}, {ar:"القابض", en:"Al-Qabid"}, {ar:"الباسط", en:"Al-Basit"}, {ar:"الخافض", en:"Al-Khafid"}, {ar:"الرافع", en:"Ar-Rafi"}, {ar:"المعز", en:"Al-Mu'izz"}, {ar:"المذل", en:"Al-Mudhill"}, {ar:"السميع", en:"As-Sami"}, {ar:"البصير", en:"Al-Basir"}, {ar:"الحكم", en:"Al-Hakam"}, {ar:"العدل", en:"Al-Adl"}, {ar:"اللطيف", en:"Al-Latif"}, {ar:"الخبير", en:"Al-Khabir"}, {ar:"الحليم", en:"Al-Halim"}, {ar:"العظيم", en:"Al-Azim"}, {ar:"الغفور", en:"Al-Ghafur"}, {ar:"الشكور", en:"Ash-Shakur"}, {ar:"العلي", en:"Al-Ali"}, {ar:"الكبير", en:"Al-Kabir"}, {ar:"الحفيظ", en:"Al-Hafiz"}, {ar:"المقيت", en:"Al-Muqit"}, {ar:"الحسيب", en:"Al-Hasib"}, {ar:"الجليل", en:"Al-Jalil"}, {ar:"الكريم", en:"Al-Karim"}, {ar:"الرقيب", en:"Ar-Raqib"}, {ar:"المجيب", en:"Al-Mujib"}, {ar:"الواسع", en:"Al-Wasi"}, {ar:"الحكيم", en:"Al-Hakim"}, {ar:"الودود", en:"Al-Wadud"}, {ar:"المجيد", en:"Al-Majid"}, {ar:"الباعث", en:"Al-Ba'ith"}, {ar:"الشهيد", en:"Ash-Shahid"}
+        ];
+
+        const wisdomsPool = [
+            {q: "Indeed, with hardship comes ease.", s: "Quran 94:6"},
+            {q: "So remember Me; I will remember you.", s: "Quran 2:152"},
+            {q: "Allah does not burden a soul beyond that it can bear.", s: "Quran 2:286"},
+            {q: "The best of people are those that bring most benefit to mankind.", s: "Hadith"},
+            {q: "Kindness is a mark of faith.", s: "Hadith"},
+            {q: "And He is with you wherever you are.", s: "Quran 57:4"},
+            {q: "Forgive others as you would like Allah to forgive you.", s: "Wisdom"},
+            {q: "A good word is charity.", s: "Hadith"},
+            {q: "Trust in Allah, but tie your camel.", s: "Hadith"},
+            {q: "He who has no mercy will receive no mercy.", s: "Hadith"}
+        ];
+
+        const quizBank = [
+            {q: "Who was the first Prophet?", a: ["Adam (AS)", "Nuh (AS)", "Muhammad (PBUH)"], c: 0},
+            {q: "How many Rakats in Fajr Fard?", a: ["4", "2", "3"], c: 1},
+            {q: "Which Surah is 'The Heart of Quran'?", a: ["Al-Kahf", "Ya-Sin", "Al-Baqarah"], c: 1},
+            {q: "In which month was the Quran revealed?", a: ["Rajab", "Ramadan", "Sha'ban"], c: 1},
+            {q: "What is the first pillar of Islam?", a: ["Salah", "Zakat", "Shahada"], c: 2},
+            {q: "Who built the Kaaba first?", a: ["Ibrahim (AS)", "Adam (AS)", "Ismail (AS)"], c: 1}
+        ];
+
+        function toggleMenu() { document.getElementById('fullMenu').style.display = (document.getElementById('fullMenu').style.display === 'flex') ? 'none' : 'flex'; }
+        function openSurahs() { toggleMenu(); document.getElementById('surahPanel').style.display = 'block'; }
+        function closeSurahs() { document.getElementById('surahPanel').style.display = 'none'; }
+        function openQuiz() { if(document.getElementById('fullMenu').style.display === 'flex') toggleMenu(); document.getElementById('quizPanel').style.display = 'block'; loadNewQuestion(); }
+        function closeQuiz() { document.getElementById('quizPanel').style.display = 'none'; }
+
+        function loadNewQuestion() {
+            const rand = quizBank[Math.floor(Math.random() * quizBank.length)];
+            document.getElementById('questionText').innerText = rand.q;
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = "";
+            rand.a.forEach((opt, i) => {
+                container.innerHTML += `<button class="quiz-opt" onclick="checkQuiz(${i}, ${rand.c}, this)">${opt}</button>`;
             });
+        }
 
-            const wGrid = document.getElementById('wisdomsGrid');
-            for(let i=1; i<=5; i++) {
-                wGrid.innerHTML += `<div class="card">Wisdom #${i}<br><small>Patience is key.</small></div>`;
+        function checkQuiz(choice, correct, btn) {
+            if(choice === correct) {
+                btn.style.background = "#34c759";
+                btn.style.color = "white";
+                showCoinAnimation();
+                userData.coins += 2;
+                document.getElementById('coinCount').innerText = userData.coins;
+                localStorage.setItem('alsa_v7', JSON.stringify(userData));
+                setTimeout(loadNewQuestion, 1000);
+            } else {
+                btn.style.background = "#ff3b30";
+                btn.style.color = "white";
+                setTimeout(() => btn.style.background = "#f2f2f7", 500);
+            }
+        }
+
+        function showCoinAnimation() {
+            const el = document.getElementById('coinFeedback');
+            el.classList.remove('animate-coin');
+            void el.offsetWidth;
+            el.classList.add('animate-coin');
+        }
+
+        function complete(btn) {
+            if(btn.classList.contains('done')) return;
+            userData.coins++;
+            btn.classList.add('done');
+            btn.innerHTML = 'COMPLETED <i class="fas fa-check-circle"></i>';
+            document.getElementById('coinCount').innerText = userData.coins;
+            localStorage.setItem('alsa_v7', JSON.stringify(userData));
+            showCoinAnimation();
+        }
+
+        function updateTimers() {
+            const now = new Date();
+            const ram = new Date("Feb 18, 2026 00:00:00").getTime();
+            const dR = ram - now.getTime();
+            document.getElementById('ramadan').innerText = Math.max(0, Math.floor(dR/(1000*60*60*24))) + "d " + Math.max(0, Math.floor((dR%(1000*60*60*24))/(1000*60*60))) + "h";
+
+            let jum = new Date(now);
+            jum.setDate(now.getDate() + (5 - now.getDay() + 7) % 7);
+            jum.setHours(13, 30, 0, 0);
+            if(now > jum) jum.setDate(jum.getDate() + 7);
+            const dJ = jum.getTime() - now.getTime();
+            document.getElementById('jummah').innerText = Math.floor(dJ/(1000*60*60*24)) + "d " + Math.floor((dJ%(1000*60*60*24))/(1000*60*60)) + "h";
+        }
+
+        window.onload = () => {
+            updateTimers(); setInterval(updateTimers, 60000);
+            
+            const nGrid = document.getElementById('namesGrid');
+            for(let i=0; i<99; i++) {
+                let n = allahNamesFull[i % allahNamesFull.length];
+                nGrid.innerHTML += `<div class="name-box"><span class="ar">${n.ar}</span><span class="en">${n.en}</span></div>`;
+            }
+
+            const qList = document.getElementById('quoteList');
+            for(let i=1; i<=100; i++) {
+                let w = wisdomsPool[i % wisdomsPool.length];
+                qList.innerHTML += `<div class="q-card"><p>"${w.q}"</p><span>— Wisdom #${i} • ${w.s}</span></div>`;
+            }
+
+            const sList = document.getElementById('surahList');
+            for(let i=1; i<=30; i++) {
+                let id = i.toString().padStart(3, '0');
+                sList.innerHTML += `<div class="surah-card"><b>Surah #${i}</b><audio controls preload="none" src="https://server8.mp3quran.net/afs/${id}.mp3"></audio></div>`;
             }
         };
     </script>
