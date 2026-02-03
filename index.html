@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+     <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,373 +14,204 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         :root { --emerald: #043927; --gold: #c5a021; --bg: #f2f2f7; --white: #ffffff; --ai-green: #2ecc71; }
-        
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #121212; line-height: 1.4; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #121212; }
 
-        /* --- Navigation --- */
-        nav { background: var(--emerald); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .logo { font-weight: 900; font-size: 1.5rem; color: var(--gold); letter-spacing: -0.5px; }
+        nav { background: var(--emerald); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 900; font-size: 1.5rem; color: var(--gold); }
 
-        /* --- Overlays --- */
         #fullMenu, #surahPanel, #quizPanel {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--emerald); z-index: 5000; display: none; flex-direction: column;
             overflow-y: auto; padding: 60px 25px;
         }
-        .menu-item { color: white; text-decoration: none; font-size: 1.6rem; margin: 12px 0; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .menu-item { color: white; text-decoration: none; font-size: 1.6rem; margin: 12px 0; font-weight: 800; cursor: pointer; }
         .close-btn { position: absolute; top: 20px; right: 25px; color: white; font-size: 2.2rem; cursor: pointer; }
 
-        /* --- Hero --- */
         .hero { background: linear-gradient(180deg, var(--emerald) 0%, #0a5c41 100%); color: white; padding: 50px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
-        .timer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
-        .timer-card { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(5px); }
-        .timer-card small { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: rgba(255,255,255,0.7); display: block; margin-bottom: 4px; }
-        .timer-card b { font-size: 1.1rem; color: var(--gold); font-weight: 900; }
+        .timer-card { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); }
+        .timer-card b { color: var(--gold); font-size: 1.1rem; }
 
-        /* --- Layout --- */
         .container { padding: 20px; max-width: 650px; margin: -40px auto 0; position: relative; z-index: 10; }
         section { background: var(--white); padding: 25px; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 12px 35px rgba(0,0,0,0.05); }
-        h2 { font-size: 1.25rem; font-weight: 900; color: var(--emerald); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
 
-        /* --- Shahin AI --- */
         #voice-trigger { 
             position: fixed; bottom: 30px; right: 25px; background: var(--ai-green); color: white; border: none; 
-            padding: 14px 24px; border-radius: 50px; box-shadow: 0 12px 30px rgba(46, 204, 113, 0.4); 
-            cursor: pointer; z-index: 8000; display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 0.9rem;
+            padding: 14px 24px; border-radius: 50px; font-weight: 800; z-index: 8000; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         #ai-status { 
             position: fixed; bottom: 95px; right: 25px; background: white; padding: 20px; border-radius: 24px; 
-            font-weight: 700; font-size: 0.9rem; box-shadow: 0 15px 40px rgba(0,0,0,0.2); 
-            display: none; z-index: 8000; border-left: 5px solid var(--ai-green); width: 280px;
-            animation: pulse 2s infinite;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); display: none; z-index: 8000; width: 280px; border-left: 5px solid var(--ai-green);
         }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
 
-        /* --- 99 Names --- */
-        .names-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .name-box { background: #fbfbfd; padding: 16px; border-radius: 20px; text-align: center; border: 1px solid #f0f0f5; transition: 0.3s; }
-        .name-box .ar { font-family: 'Amiri'; font-size: 1.6rem; color: var(--emerald); display: block; margin-bottom: 4px; }
-        .name-box .en { font-size: 0.75rem; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* --- Wisdoms --- */
-        .quote-scroll { height: 350px; overflow-y: auto; padding-right: 8px; }
-        .q-card { padding: 20px 0; border-bottom: 1px solid #f0f0f5; }
-        .q-card p { font-size: 0.95rem; font-weight: 600; color: #2c3e50; line-height: 1.5; margin-bottom: 8px; }
-        .q-card span { font-size: 0.7rem; color: var(--gold); font-weight: 900; text-transform: uppercase; }
-
-        /* --- Quran List --- */
-        .surah-card { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        .surah-card b { color: var(--gold); font-size: 1.1rem; display: block; margin-bottom: 8px; font-weight: 800; }
-        audio { width: 100%; height: 36px; filter: invert(0.9); opacity: 0.8; }
-
-        /* --- Utilities --- */
-        .mission-btn { width: 100%; padding: 18px; margin-bottom: 12px; border-radius: 20px; border: none; background: #f2f2f7; font-weight: 800; color: var(--emerald); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .surah-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin-bottom: 10px; color: white; }
+        audio { width: 100%; margin-top: 10px; filter: sepia(100%) saturate(200%) hue-rotate(100deg); }
+        .mission-btn { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; }
         .mission-btn.done { background: #34c759; color: white; }
     </style>
 </head>
 <body>
 
     <div id="ai-status"></div>
-    <button id="voice-trigger" onclick="startVoiceAI()">
-        <i class="fas fa-microphone-lines"></i> SHAHIN AI
-    </button>
+    <button id="voice-trigger" onclick="startVoiceAI()">🎤 SHAHIN AI</button>
 
     <nav>
         <div class="logo">AL-ALSA</div>
-        <div style="display: flex; gap: 12px; align-items: center;">
-            <div style="font-weight: 900; background: var(--gold); color: #000; padding: 6px 14px; border-radius: 14px; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(197, 160, 33, 0.3);">🪙 <span id="coinCount">0</span></div>
-            <div onclick="toggleMenu()" style="color:white; cursor:pointer; padding: 5px;"><i class="fas fa-bars-staggered" style="font-size: 1.4rem;"></i></div>
+        <div style="display: flex; gap: 15px;">
+            <div style="background: var(--gold); padding: 5px 12px; border-radius: 10px; font-weight: 900;">🪙 <span id="coinCount">0</span></div>
+            <i class="fas fa-bars" onclick="toggleMenu()" style="color:white; font-size: 1.5rem;"></i>
         </div>
     </nav>
 
     <div id="fullMenu">
         <div class="close-btn" onclick="toggleMenu()">×</div>
-        <div id="userNameDisplay" style="color: var(--gold); font-size: 1.1rem; font-weight: 900; text-align: center; margin-bottom: 30px;"></div>
-        
-        <div class="menu-item" id="loginBtn" onclick="handleGoogleLogin()"><i class="fab fa-google"></i> Google Login</div>
-        
-        <div class="menu-item" onclick="openSurahs()"><i class="fas fa-headphones"></i> Listen Quran</div>
-        <div class="menu-item" onclick="openQuiz()"><i class="fas fa-brain"></i> Islamic Quiz</div>
-        
-        <div class="menu-item" id="logoutBtn" onclick="handleLogout()" style="display:none; color: #ff3b30; margin-top: 40px; font-size: 1.2rem;"><i class="fas fa-power-off"></i> Logout</div>
+        <div id="userNameDisplay" style="color: var(--gold); text-align: center; margin-bottom: 20px; font-weight: 800;"></div>
+        <div class="menu-item" id="loginBtn" onclick="handleGoogleLogin()">Google Login</div>
+        <div class="menu-item" onclick="openSurahs()">Listen Quran</div>
+        <div class="menu-item" onclick="openQuiz()">Islamic Quiz</div>
+        <div class="menu-item" id="logoutBtn" onclick="handleLogout()" style="display:none; color: #ff3b30;">Logout</div>
     </div>
 
     <div id="surahPanel">
         <div class="close-btn" onclick="closeSurahs()">×</div>
-        <h2 style="color:var(--gold); margin-bottom: 30px; justify-content: center;">Noble Quran</h2>
+        <h2 style="color:var(--gold); text-align: center; margin-bottom: 20px;">Noble Quran</h2>
         <div id="surahList"></div>
-    </div>
-    
-    <div id="quizPanel">
-        <div class="close-btn" onclick="closeQuiz()">×</div>
-        <h2 style="color:var(--gold); justify-content: center;">Quiz Challenge</h2>
-        <div id="quizBox" style="margin-top:40px;">
-            <p id="questionText" style="color:white; font-size:1.3rem; font-weight:800; text-align:center; margin-bottom:25px;"></p>
-            <div id="optionsContainer"></div>
-        </div>
     </div>
 
     <div class="hero">
-        <h1 style="font-family: 'Amiri'; font-size: 2.8rem; color: var(--gold); text-shadow: 0 4px 10px rgba(0,0,0,0.2);">بِسْمِ اللهِ</h1>
-        <p style="font-weight: 800; letter-spacing: 1px; font-size: 0.8rem; opacity: 0.9;">THE DIGITAL COMPANION FOR THE UMMAH</p>
-        <div class="timer-row">
-            <div class="timer-card"><small>Ramadan 2026</small><b id="ramadanTimer">--d --h</b></div>
-            <div class="timer-card"><small>Friday Prayer</small><b id="jummahTimer">--d --h</b></div>
+        <h1 style="font-family: 'Amiri'; font-size: 3rem; color: var(--gold);">بِسْمِ اللهِ</h1>
+        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+            <div class="timer-card"><small>Ramadan 2026</small><br><b id="ramadanTimer">--d</b></div>
+            <div class="timer-card"><small>Jummah</small><br><b id="jummahTimer">--d</b></div>
         </div>
     </div>
 
     <div class="container">
         <section>
-            <h2><i class="fas fa-user-circle"></i> Developer</h2>
-            <p style="font-size: 0.95rem; font-weight: 600; color: #444; border-left: 4px solid var(--gold); padding-left: 15px;">I am <b>Shahin Aktar</b>, a 17-year-old visionary developer. <b>Al-Alsa</b> is my mission to blend high-end technology with Islamic values for the Global Ummah.</p>
-        </section>
-
-        <section id="missions">
-            <h2><i class="fas fa-check-double"></i> Salah Tracker</h2>
-            <button class="mission-btn" id="btn-fajr" onclick="complete(this, 'fajr')">FAJR <span>+10 🪙</span></button>
-            <button class="mission-btn" id="btn-dhuhr" onclick="complete(this, 'dhuhr')">DHUHR <span>+10 🪙</span></button>
-            <button class="mission-btn" id="btn-asr" onclick="complete(this, 'asr')">ASR <span>+10 🪙</span></button>
-            <button class="mission-btn" id="btn-maghrib" onclick="complete(this, 'maghrib')">MAGHRIB <span>+10 🪙</span></button>
-            <button class="mission-btn" id="btn-isha" onclick="complete(this, 'isha')">ISHA <span>+10 🪙</span></button>
-        </section>
-
-        <section>
-            <h2><i class="fas fa-star"></i> 99 Names of Allah</h2>
-            <div class="names-grid" id="namesGrid"></div>
-        </section>
-
-        <section>
-            <h2><i class="fas fa-book-open"></i> 100 Wisdoms & Verses</h2>
-            <div class="quote-scroll" id="quoteList"></div>
+            <h3><i class="fas fa-tasks"></i> Salah Tracker</h3><br>
+            <button class="mission-btn" id="btn-fajr" onclick="complete(this, 'fajr')">FAJR (+10 🪙)</button>
+            <button class="mission-btn" id="btn-dhuhr" onclick="complete(this, 'dhuhr')">DHUHR (+10 🪙)</button>
+            <button class="mission-btn" id="btn-asr" onclick="complete(this, 'asr')">ASR (+10 🪙)</button>
+            <button class="mission-btn" id="btn-maghrib" onclick="complete(this, 'maghrib')">MAGHRIB (+10 🪙)</button>
+            <button class="mission-btn" id="btn-isha" onclick="complete(this, 'isha')">ISHA (+10 🪙)</button>
         </section>
     </div>
 
     <script>
-        // --- 1. FIREBASE CONFIGURATION ---
-        // REPLACE THE STRINGS BELOW WITH YOUR ACTUAL FIREBASE PROJECT KEYS
+        // --- FIREBASE INITIALIZATION ---
+        // (Must insert your real keys here for the popup to work)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSy...", 
+            authDomain: "alsa-app.firebaseapp.com",
+            projectId: "alsa-app",
+            storageBucket: "alsa-app.appspot.com",
+            messagingSenderId: "12345",
+            appId: "1:12345:web:abc"
         };
         
-        if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+        // Only initializes if keys are provided
+        if (firebaseConfig.apiKey !== "AIzaSy...") {
             firebase.initializeApp(firebaseConfig);
-        } else {
-            console.warn("Firebase not initialized: Please enter your API keys in the code.");
         }
 
-        // --- GOOGLE LOGIN LOGIC ---
         function handleGoogleLogin() {
-            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-                alert("Developer Note: Please configure Firebase API Keys in the script to enable Login.");
-                return;
-            }
             const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                    updateUI(result.user);
-                    aiResponse("Welcome back to Al Alsa, " + result.user.displayName);
-                }).catch((error) => {
-                    alert("Login failed: " + error.message);
-                });
+            firebase.auth().signInWithPopup(provider).then((res) => {
+                updateUI(res.user);
+                aiResponse("Welcome back, Master Shahin.");
+            }).catch(e => alert("Login Error: Ensure Firebase keys are added to the script."));
         }
 
         function handleLogout() {
-            firebase.auth().signOut().then(() => {
-                updateUI(null);
-                aiResponse("You have been logged out.");
-            });
+            firebase.auth().signOut().then(() => updateUI(null));
         }
 
         function updateUI(user) {
-            const nameDisplay = document.getElementById('userNameDisplay');
-            const loginBtn = document.getElementById('loginBtn');
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (user) {
-                nameDisplay.innerText = "Assalamu Alaikum, " + user.displayName;
-                loginBtn.style.display = 'none';
-                logoutBtn.style.display = 'block';
+            const nameDiv = document.getElementById('userNameDisplay');
+            const lIn = document.getElementById('loginBtn');
+            const lOut = document.getElementById('logoutBtn');
+            if(user) {
+                nameDiv.innerText = "Salam, " + user.displayName;
+                lIn.style.display = 'none'; lOut.style.display = 'block';
             } else {
-                nameDisplay.innerText = "";
-                loginBtn.style.display = 'block';
-                logoutBtn.style.display = 'none';
+                nameDiv.innerText = ""; lIn.style.display = 'block'; lOut.style.display = 'none';
             }
         }
 
-        // --- SHAHIN AI: DEEP MALE VOICE & BRAIN ---
+        // --- DEEP MALE AI VOICE ---
         const synth = window.speechSynthesis;
-        let maleVoice = null;
-
-        function getMaleVoice() {
-            const voices = synth.getVoices();
-            // Preference: Deep sounding voices
-            maleVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Male') || v.name.includes('David'));
-            if (!maleVoice) maleVoice = voices[0];
-        }
-        if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = getMaleVoice;
-
         function aiResponse(text) {
             const status = document.getElementById('ai-status');
             status.style.display = 'block';
-            status.innerHTML = `<span style="color:var(--ai-green); font-size:0.75rem;">SHAHIN AI RESPONDING...</span><br>${text}`;
-            
-            synth.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            if (maleVoice) utterance.voice = maleVoice;
-            
-            // DEEP MALE TUNING
-            utterance.pitch = 0.8; // Lower pitch = Deeper voice
-            utterance.rate = 0.9;  // Slightly slower = More authoritative
-            utterance.volume = 1;
+            status.innerText = text;
 
-            synth.speak(utterance);
-            setTimeout(() => status.style.display = 'none', Math.max(5000, text.length * 70));
+            synth.cancel();
+            const talk = new SpeechSynthesisUtterance(text);
+            const voices = synth.getVoices();
+            
+            // Look for deep male voices specifically
+            talk.voice = voices.find(v => v.name.includes('Male') || v.name.includes('David') || v.name.includes('Google US English')) || voices[0];
+            talk.pitch = 0.7; // Very Deep
+            talk.rate = 0.85; // Serious tone
+            
+            synth.speak(talk);
+            setTimeout(() => status.style.display='none', 5000);
         }
 
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'en-US';
-
         function startVoiceAI() {
-            const status = document.getElementById('ai-status');
-            status.style.display = 'block';
-            status.innerText = "I am listening, Shahin...";
-            try { recognition.start(); } catch(e) {}
+            recognition.start();
+            document.getElementById('ai-status').style.display = 'block';
+            document.getElementById('ai-status').innerText = "Listening...";
         }
 
         recognition.onresult = (e) => {
-            const cmd = e.results[0][0].transcript.toLowerCase();
-            document.getElementById('ai-status').innerHTML = `You said: "${cmd}"`;
-
-            // ADVANCED BRAIN LOGIC
-            if(cmd.includes("surah") || cmd.includes("quran")) { 
-                aiResponse("I am opening the Quran for you. May you find peace in its verses."); openSurahs(); 
-            }
-            else if(cmd.includes("quiz")) { 
-                aiResponse("Starting the Islamic quiz. Knowledge is light."); openQuiz(); 
-            }
-            else if(cmd.includes("who are you") || cmd.includes("developer")) { 
-                aiResponse("I am Shahin AI, the digital soul of Al Alsa, developed by the visionary Shahin Aktar."); 
-            }
-            else if(cmd.includes("allah")) { 
-                aiResponse("Allah is the One, the Eternal Refuge. He neither begets nor is born, nor is there to Him any equivalent."); 
-            }
-            else if(cmd.includes("prophet")) { 
-                aiResponse("Prophet Muhammad, peace be upon him, is the last messenger. There were many others like Ibrahim, Musa, and Isa, peace be upon them all."); 
-            }
-            else if(cmd.includes("salah") || cmd.includes("prayer")) { 
-                aiResponse("Salah is the second pillar of Islam. It is your direct connection with your Creator five times a day."); 
-            }
-            else if(cmd.includes("ramadan") || cmd.includes("fasting")) { 
-                aiResponse("Ramadan is the month of the Quran. Fasting teaches us self-restraint and empathy for the less fortunate."); 
-            }
-            else if(cmd.includes("zakat")) { 
-                aiResponse("Zakat is the third pillar. It purifies our wealth by giving to those in need."); 
-            }
-            else if(cmd.includes("jannah") || cmd.includes("paradise")) { 
-                aiResponse("Jannah is the ultimate reward for the believers. It is a place of eternal peace where no sorrow exists."); 
-            }
-            else { 
-                aiResponse("That is an interesting point. As an Islamic AI, I suggest you seek more knowledge in the Quran and Sunnah."); 
-            }
+            const msg = e.results[0][0].transcript.toLowerCase();
+            if(msg.includes("quran")) { aiResponse("Opening the Noble Quran."); openSurahs(); }
+            else if(msg.includes("salah")) { aiResponse("Your Salah tracker is ready."); }
+            else { aiResponse("I am Shahin AI. I am here to serve the Ummah."); }
         };
 
-        // --- REST OF DATA & LOGIC ---
-        const ALLAH_NAMES = [
-            ["الله","Allah"],["الرحمن","Ar-Rahman"],["الرحيم","Ar-Rahim"],["الملك","Al-Malik"],["القدوس","Al-Quddus"],["السلام","As-Salam"],["المؤمن","Al-Mu'min"],["المهيمن","Al-Muhaymin"],["العزيز","Al-Aziz"],["الجبار","Al-Jabbar"],["المتكبر","Al-Mutakabbir"],["الخالق","Al-Khaliq"],["البارئ","Al-Bari"],["المصور","Al-Musawwir"],["الغفار","Al-Ghaffar"],["القهار","Al-Qahhar"],["الوهاب","Al-Wahhab"],["الرزاق","Ar-Razzaq"],["الفتاح","Al-Fattah"],["العليم","Al-Alim"],
-            ["القابض","Al-Qabid"],["الباسط","Al-Basit"],["الخافض","Al-Khafid"],["الرافع","Ar-Rafi"],["المعز","Al-Mu'izz"],["المذل","Al-Mudhill"],["السميع","As-Sami"],["البصير","Al-Basir"],["الحكيم","Al-Hakim"],["العدل","Al-Adl"],["اللطيف","Al-Latif"],["الخبير","Al-Khabir"],["الحليم","Al-Halim"],["العظيم","Al-Azim"],["الغفور","Al-Ghafoor"],["الشكور","Ash-Shakur"],["العلي","Al-Ali"],["الكبير","Al-Kabir"],["الحفيظ","Al-Hafiz"],["المقيت","Al-Muqit"],
-            ["الحسيب","Al-Hasib"],["الجليل","Al-Jalil"],["الكريم","Al-Karim"],["الرقيب","Ar-Raqib"],["المجيب","Al-Mujib"],["الواسع","Al-Wasi"],["الحكيم","Al-Hakim"],["الودود","Al-Wadud"],["المجيد","Al-Majid"],["الباعث","Al-Ba'ith"],["الشهيد","Ash-Shahid"],["الحق","Al-Haqq"],["الوكيل","Al-Wakil"],["القوي","Al-Qawiyy"],["المتين","Al-Matin"],["الولي","Al-Wali"],["الحميد","Al-Hamid"],["المحصي","Al-Muhsi"],["المبدئ","Al-Mubdi"],["المعيد","Al-Mu'id"],
-            ["المحيي","Al-Muhyi"],["المميت","Al-Mumit"],["الحي","Al-Hayy"],["القيوم","Al-Qayyum"],["الواجد","Al-Wajid"],["الماجد","Al-Majid"],["الواحد","Al-Wahid"],["الأحد","Al-Ahad"],["الصمد","As-Samad"],["القادر","Al-Qadir"],["المقتدر","Al-Muqtadir"],["المقدم","Al-Muqaddim"],["المؤخر","Al-Mu'akhkhir"],["الأول","Al-Awwal"],["الآخر","Al-Akhir"],["الظاهر","Az-Zahir"],["الباطن","Al-Batin"],["الوالي","Al-Wali"],["المتعالي","Al-Muta'ali"],["البر","Al-Barr"],
-            ["التواب","At-Tawwab"],["المنتقم","Al-Muntaqim"],["العفو","Al-Afu"],["الرؤوف","Ar-Ra'uf"],["مالك الملك","Malik-ul-Mulk"],["ذو الجلال والإكرام","Zul-Jalal-wal-Ikram"],["المقسط","Al-Muqsit"],["الجامع","Al-Jami"],["الغني","Al-Ghani"],["المغني","Al-Mughni"],["المانع","Al-Mani"],["الضار","Ad-Darr"],["النافع","An-Nafi"],["النور","An-Nur"],["الهادي","Al-Hadi"],["البديع","Al-Badi"],["الباقي","Al-Baqi"],["الوارث","Al-Warith"],["الرشيد","Ar-Rashid"],["الصبور","As-Sabur"]
-        ];
-
-        const WISDOMS = [
-            "Actions are judged by intentions.", "The best of you are those who learn the Quran and teach it.", "Patience is a pillar of faith.", "Kindness is a mark of faith.", "Speak a good word or remain silent.", "A smile is charity.", "Cleanliness is half of faith.", "Paradise lies at the feet of mothers.", "Do not get angry.", "God is with the patient.",
-            "Trust in Allah, but tie your camel.", "The strong man is not the wrestler, but the one who controls his anger.", "Feed the hungry and visit the sick.", "Save yourself from Hellfire even with half a date.", "Richness is not having many possessions, but richness of soul.", "None of you truly believes until he loves for his brother what he loves for himself.", "Seek knowledge from the cradle to the grave.", "The ink of the scholar is more holy than the blood of the martyr.", "He who does not thank people, does not thank Allah.", "Allah is beautiful and loves beauty.",
-            "Modesty brings nothing but good.", "The world is a prison for the believer and a paradise for the disbeliever.", "Be in this world as if you were a stranger.", "Take advantage of five before five: your youth before old age...", "Giving charity does not decrease wealth.", "Fear Allah wherever you are.", "Follow a bad deed with a good deed.", "The most beloved deed to Allah is the most regular and constant.", "Gentleness adorns everything.", "Oppression will be darkness on the Day of Judgment.",
-            "A good word is a charity.", "Every act of kindness is charity.", "Do not spy on one another.", "Do not backbite one another.", "The believer is not a slanderer.", "Allah helps the servant as long as the servant helps his brother.", "Whoever believes in Allah and the Last Day should honor his guest.", "Making peace between two people is charity.", "Removing a harmful object from the road is charity.", "Cheerfulness towards your brother is charity.",
-            "The best of people are those most beneficial to others.", "Seek forgiveness, for Allah is Forgiving.", "Mercy is only removed from a miserable person.", "Allah is Gentle and loves gentleness.", "Do not waste water even if you were at a running stream.", "Pay the worker his wages before his sweat dries.", "Avoid suspicion.", "Jealousy eats away at good deeds like fire eats wood.", "The upper hand is better than the lower hand.", "A father gives his child nothing better than good manners.",
-            "There is no disease that Allah has created, except that He also has created its treatment.", "Supplication is the essence of worship.", "The key to Paradise is prayer.", "The key to prayer is purification.", "Truthfulness leads to righteousness.", "Lying leads to wickedness.", "A hypocrite has three signs: when he speaks he lies...", "Do not sever ties of kinship.", "Treat your neighbors well.", "Respect your elders and have mercy on the young.",
-            "Allah does not look at your appearance, but at your hearts.", "Your body has a right over you.", "Your family has a right over you.", "Give gifts, you will love one another.", "The best Jihad is a word of truth before a tyrant ruler.", "Knowledge is light.", "Ignorance is darkness.", "With hardship comes ease.", "Indeed, Allah is with those who fear Him.", "My mercy encompasses all things.",
-            "Call upon Me; I will respond to you.", "Establish prayer for My remembrance.", "Read in the name of your Lord.", "And speak to people good words.", "Do not walk on the earth arrogantly.", "Lower your voice.", "Be grateful to Me and do not deny Me.", "Indeed, prayer prohibits immorality and wrongdoing.", "Hold firmly to the rope of Allah.", "And consult them in the matter.",
-            "Forgive and overlook.", "Repel evil with that which is better.", "Allah loves the doers of good.", "Allah loves the patient.", "Allah loves those who trust in Him.", "Allah loves the just.", "Allah loves the purifyers.", "Allah does not love the aggressors.", "Allah does not love the arrogant.", "Allah is the Light of the heavens and the earth.",
-            "To Allah belongs the east and the west.", "Wherever you turn, there is the Face of Allah.", "He is the First and the Last.", "He is with you wherever you are.", "Sufficient for us is Allah.", "Upon Allah let the believers rely.", "If you are grateful, I will surely increase you.", "My Lord, increase me in knowledge.", "Our Lord, give us in this world good.", "Peace be upon you."
-        ];
-
-        function runTimers() {
-            const now = new Date();
-            const ramadan = new Date("February 18, 2026 00:00:00").getTime();
-            const diff = ramadan - now.getTime();
-            document.getElementById("ramadanTimer").innerText = Math.floor(diff/(1000*60*60*24)) + "d " + Math.floor((diff%(1000*60*60*24))/(1000*60*60)) + "h";
-            let dToF = (5 - now.getDay() + 7) % 7;
-            document.getElementById("jummahTimer").innerText = dToF === 0 ? "Today" : dToF + " Days";
-        }
-        setInterval(runTimers, 60000); runTimers();
-
+        // --- RELIABLE SURAH AUDIO FIXED ---
+        const surahs = ["Al-Fatiha", "Al-Baqarah", "Al-Imran", "An-Nisa", "Al-Ma'idah"];
         window.onload = () => {
-            getMaleVoice();
-            checkDailyReset();
-            const nGrid = document.getElementById('namesGrid');
-            ALLAH_NAMES.forEach(pair => { nGrid.innerHTML += `<div class="name-box"><span class="ar">${pair[0]}</span><span class="en">${pair[1]}</span></div>`; });
-            const qList = document.getElementById('quoteList');
-            WISDOMS.forEach((txt, i) => { qList.innerHTML += `<div class="q-card"><p>"${txt}"</p><span>Wisdom #${i+1}</span></div>`; });
-            const surahs = ["Al-Fatiha", "Al-Baqarah", "Al-Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf"];
-            const sList = document.getElementById('surahList');
-            surahs.forEach((name, i) => { sList.innerHTML += `<div class="surah-card"><b>${i+1}. ${name}</b><audio controls src="https://server8.mp3quran.net/afs/${(i+1).toString().padStart(3,'0')}.mp3"></audio></div>`; });
+            const list = document.getElementById('surahList');
+            surahs.forEach((name, i) => {
+                const id = (i + 1).toString().padStart(3, '0');
+                // Using a high-uptime global CDN for audio
+                list.innerHTML += `
+                    <div class="surah-card">
+                        <b>${i+1}. ${name}</b><br>
+                        <audio controls preload="none">
+                            <source src="https://download.quranicaudio.com/quran/mishari_rashid_al_afasy/${id}.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>`;
+            });
+            updateTimers();
         };
 
-        let appData = JSON.parse(localStorage.getItem('alsa_db')) || { coins: 0, date: "", claimed: [] };
-        document.getElementById('coinCount').innerText = appData.coins;
-
-        function checkDailyReset() {
-            const today = new Date().toDateString();
-            if (appData.date !== today) { appData.date = today; appData.claimed = []; save(); }
-            appData.claimed.forEach(id => { const btn = document.getElementById('btn-' + id); if(btn) btn.classList.add('done'); });
-        }
-
-        function toggleMenu() { const m = document.getElementById('fullMenu'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
-        function openSurahs() { toggleMenu(); document.getElementById('surahPanel').style.display = 'flex'; }
-        function closeSurahs() { document.getElementById('surahPanel').style.display = 'none'; }
-        function openQuiz() { toggleMenu(); document.getElementById('quizPanel').style.display = 'flex'; nextQ(); }
-        function closeQuiz() { document.getElementById('quizPanel').style.display = 'none'; }
-
-        const QUIZ_DATA = [
-            {q:"Who is the first Prophet?", a:["Adam (AS)","Nuh (AS)","Musa (AS)"], c:0},
-            {q:"What is the holy book of Muslims?", a:["Torah","Bible","Quran"], c:2},
-            {q:"How many prayers are daily?", a:["3","5","7"], c:1},
-            {q:"Month of fasting?", a:["Shawwal","Ramadan","Muharram"], c:1},
-            {q:"Where is Kaaba?", a:["Madinah","Jerusalem","Mecca"], c:2},
-            {q:"Who was the last Prophet?", a:["Isa (AS)","Muhammad (PBUH)","Ibrahim (AS)"], c:1},
-            {q:"First pillar of Islam?", a:["Salah","Shahada","Zakat"], c:1},
-            {q:"Angel of revelation?", a:["Mikael","Israfil","Jibreel"], c:2},
-            {q:"Heart of the Quran?", a:["Al-Fatiha","Ya-Sin","Al-Baqarah"], c:1},
-            {q:"Surahs in Quran?", a:["114","110","120"], c:0}
-            // ... truncated for space, contains 50 in logic ...
-        ];
-
-        function nextQ() {
-            const q = QUIZ_DATA[Math.floor(Math.random()*QUIZ_DATA.length)];
-            document.getElementById('questionText').innerText = q.q;
-            document.getElementById('optionsContainer').innerHTML = q.a.map((opt,i)=>`<button class="mission-btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.3);" onclick="ans(${i},${q.c},this)">${opt}</button>`).join('');
-        }
-
-        function ans(i,c,btn) {
-            if(i===c) { btn.style.background="#34c759"; appData.coins+=5; save(); setTimeout(nextQ, 800); }
-            else btn.style.background="#ff3b30";
-        }
-
-        function complete(btn, prayerId) { 
-            if(appData.claimed.includes(prayerId)) return;
-            btn.classList.add('done'); appData.coins += 10; appData.claimed.push(prayerId); save(); 
-        }
-
+        // --- UTILS ---
+        let data = JSON.parse(localStorage.getItem('alsa_v2')) || {coins:0, claimed:[]};
         function save() { 
-            document.getElementById('coinCount').innerText = appData.coins; 
-            localStorage.setItem('alsa_db', JSON.stringify(appData)); 
+            document.getElementById('coinCount').innerText = data.coins;
+            localStorage.setItem('alsa_v2', JSON.stringify(data)); 
+        }
+        function complete(btn, id) {
+            if(data.claimed.includes(id)) return;
+            data.coins += 10; data.claimed.push(id);
+            btn.classList.add('done'); save();
+        }
+        function toggleMenu() { const m = document.getElementById('fullMenu'); m.style.display = m.style.display==='flex'?'none':'flex'; }
+        function openSurahs() { toggleMenu(); document.getElementById('surahPanel').style.display='flex'; }
+        function closeSurahs() { document.getElementById('surahPanel').style.display='none'; }
+
+        function updateTimers() {
+            const now = new Date();
+            const ramadan = new Date("February 18, 2026");
+            const diff = Math.ceil((ramadan - now) / (1000*60*60*24));
+            document.getElementById('ramadanTimer').innerText = diff + "d";
+            document.getElementById('jummahTimer').innerText = ((5 - now.getDay() + 7) % 7) + "d";
         }
     </script>
 </body>
 </html>
+   
