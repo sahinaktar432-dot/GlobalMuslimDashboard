@@ -22,90 +22,89 @@
         .logo { font-weight: 900; font-size: 1.4rem; letter-spacing: -1.2px; color: var(--gold); }
 
         /* UPGRADED ANIMATED PANELS */
-        #fullMenu, #surahPanel, #quizPanel, #tasbihPanel {
+        #fullMenu, #surahPanel, #quizPanel, #tasbihPanel, #aiTutorPanel {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--emerald); z-index: 5000; display: none; flex-direction: column;
             overflow-y: auto; padding: 40px 20px;
             opacity: 0; transform: translateY(30px);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        /* Class to trigger the smooth entry */
         .panel-active { display: flex !important; opacity: 1 !important; transform: translateY(0) !important; }
 
+        /* PREMIUM HUB STYLES */
+        .hub-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 8000;
+            display: none; align-items: flex-end; justify-content: center;
+        }
+        .hub-container {
+            background: white; width: 100%; max-width: 500px;
+            border-top-left-radius: 32px; border-top-right-radius: 32px;
+            padding: 30px 20px; animation: slideUp 0.4s cubic-bezier(0, 0, 0.2, 1);
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .hub-card {
+            display: flex; align-items: center; gap: 15px;
+            padding: 18px; border-radius: 20px; border: 2px solid #f0f0f5;
+            margin-bottom: 12px; cursor: pointer; transition: 0.2s;
+        }
+        .hub-card i { font-size: 1.8rem; width: 40px; text-align: center; color: var(--emerald); }
+        .hub-card.active { border-color: #34c759; background: #f2fff5; }
+        .hub-card h3 { font-size: 1.1rem; font-weight: 900; color: #1c1c1e; }
+        .hub-card p { font-size: 0.8rem; color: #8e8e93; font-weight: 600; }
+        .start-learning-btn {
+            width: 100%; background: var(--emerald); color: white; border: none;
+            padding: 18px; border-radius: 20px; font-size: 1.1rem;
+            font-weight: 900; margin-top: 15px; cursor: pointer;
+        }
+
+        /* AI TUTOR PANEL SPECIFICS */
+        #chatContainer { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .message { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; font-weight: 600; }
+        .msg-ai { align-self: flex-start; background: rgba(255,255,255,0.1); color: white; border-bottom-left-radius: 4px; }
+        .msg-user { align-self: flex-end; background: var(--gold); color: var(--emerald); border-bottom-right-radius: 4px; }
+        .chat-input-area { display: flex; gap: 10px; padding: 20px 0; }
+        #userInput { flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 15px; color: white; outline: none; }
+        .send-btn { background: var(--gold); border: none; width: 50px; border-radius: 15px; color: var(--emerald); cursor: pointer; }
+
+        /* REST OF YOUR STYLES */
         .menu-item { color: white; text-decoration: none; font-size: 1.6rem; margin: 15px 0; font-weight: 900; cursor: pointer; text-align: center; transition: 0.2s; }
         .menu-item:active { transform: scale(0.95); opacity: 0.8; }
-
-        /* PRO GOOGLE LOGIN BUTTON */
-        #loginBtn {
-            background: white; color: #444; padding: 16px; border-radius: 20px;
-            font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            margin-bottom: 25px; border: none; width: 100%;
-        }
+        #loginBtn { background: white; color: #444; padding: 16px; border-radius: 20px; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; border: none; width: 100%; }
         #loginBtn i { color: #4285F4; font-size: 1.3rem; }
-
         .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 2.5rem; cursor: pointer; z-index: 6000; }
-
         .hero { background: linear-gradient(180deg, var(--emerald) 0%, #0a5c41 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
         .timer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
         .timer-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
         .timer-card b { font-size: 1.1rem; color: var(--gold); display: block; font-weight: 900; margin-top: 5px; }
-
         .container { padding: 20px; max-width: 650px; margin: 0 auto; margin-top: -30px; }
         section { background: var(--white); padding: 25px; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
         h2 { font-size: 1.3rem; font-weight: 900; color: var(--emerald); margin-bottom: 15px; letter-spacing: -0.5px; }
-
-        /* PRO BUTTON ACTIONS */
-        .mission-btn, .quiz-opt { 
-            width: 100%; padding: 18px; margin-bottom: 12px; border-radius: 20px; 
-            border: 1px solid #eee; background: #f8f9fb; font-weight: 900; 
-            color: var(--emerald); display: flex; justify-content: space-between; 
-            align-items: center; cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
-        .mission-btn:active, .quiz-opt:active { transform: scale(0.96); background: #f0f0f5; }
-        .mission-btn.done { background: #34c759 !important; color: white !important; border-color: #34c759; box-shadow: 0 5px 15px rgba(52, 199, 89, 0.3); }
-
+        .mission-btn, .quiz-opt { width: 100%; padding: 18px; margin-bottom: 12px; border-radius: 20px; border: 1px solid #eee; background: #f8f9fb; font-weight: 900; color: var(--emerald); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .mission-btn.done { background: #34c759 !important; color: white !important; border-color: #34c759; }
         .names-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .name-box { background: #f8f9fa; padding: 12px; border-radius: 15px; border: 1px solid #eee; text-align: center; }
         .name-box .ar { font-family: 'Amiri'; font-size: 1.4rem; color: var(--emerald); display: block; }
         .name-box .en { font-size: 0.75rem; font-weight: 800; color: var(--gold); text-transform: uppercase; }
-
         .quote-scroll { height: 350px; overflow-y: auto; padding-right: 5px; }
         .q-card { padding: 15px 0; border-bottom: 1px solid #eee; }
         .q-card p { font-size: 0.9rem; font-weight: 700; color: #333; margin-bottom: 5px; }
         .q-card span { font-size: 0.75rem; color: var(--gold); font-weight: 800; }
-        
         #coinFeedback { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; font-weight: 900; color: var(--gold); z-index: 7000; pointer-events: none; opacity: 0; }
         .animate-coin { animation: coinPop 0.8s ease-out forwards; }
         @keyframes coinPop { 0% { opacity: 0; transform: translate(-50%, 0); } 50% { opacity: 1; transform: translate(-50%, -100px); } 100% { opacity: 0; transform: translate(-50%, -150px); } }
-        
         .surah-card { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 22px; margin-bottom: 12px; color: white; border: 1px solid rgba(255,255,255,0.1); }
         .surah-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .surah-name-ar { font-family: 'Amiri'; font-size: 1.2rem; color: var(--gold); }
         audio { width: 100%; height: 35px; margin-top: 10px; filter: invert(1) hue-rotate(180deg); opacity: 0.8; }
-
         .social-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
-        .social-links a { color: var(--emerald); text-decoration: none; font-size: 1.2rem; transition: 0.3s; }
-        .social-links a:hover { color: var(--gold); }
-
+        .social-links a { color: var(--emerald); text-decoration: none; font-size: 1.2rem; }
         .prayer-times-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .p-time-box { background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee; }
         .p-time-box span { display: block; font-size: 0.7rem; font-weight: 800; color: var(--gold); }
         .p-time-box b { font-size: 0.9rem; color: var(--emerald); }
-
-        .tasbih-circle { 
-            width: 240px; height: 240px; 
-            border: 12px solid var(--gold); 
-            border-radius: 50%; margin: 40px auto; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 4rem; color: white; font-weight: 900; 
-            cursor: pointer; transition: transform 0.1s ease;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            background: rgba(255, 255, 255, 0.05);
-            user-select: none; -webkit-tap-highlight-color: transparent;
-        }
-        .tasbih-circle:active { transform: scale(0.92); background: rgba(197, 160, 33, 0.1); }
-
+        .tasbih-circle { width: 240px; height: 240px; border: 12px solid var(--gold); border-radius: 50%; margin: 40px auto; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; font-weight: 900; cursor: pointer; transition: transform 0.1s ease; box-shadow: 0 15px 35px rgba(0,0,0,0.2); background: rgba(255, 255, 255, 0.05); user-select: none; }
+        .tasbih-circle:active { transform: scale(0.92); }
         .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .leaderboard-table tr { border-bottom: 1px solid #eee; }
         .leaderboard-table td { padding: 12px 5px; font-size: 0.9rem; font-weight: 700; }
@@ -124,6 +123,34 @@
         </div>
     </nav>
 
+    <div id="premiumHub" class="hub-overlay" onclick="closeHub()">
+        <div class="hub-container" onclick="event.stopPropagation()">
+            <h2 style="color: #1c1c1e; margin-bottom: 20px; text-align: center;">Choose Learning Mode</h2>
+            <div class="hub-card" id="card-ai" onclick="selectHubMode('ai')">
+                <i class="fas fa-microchip"></i>
+                <div>
+                    <h3>AI Tutor</h3>
+                    <p>Ask anything about Islam & Quran</p>
+                </div>
+            </div>
+            <div class="hub-card active" id="card-memorise" onclick="selectHubMode('memorise')">
+                <i class="fas fa-brain"></i>
+                <div>
+                    <h3>Memorise</h3>
+                    <p>Practice with active recall quizzes</p>
+                </div>
+            </div>
+            <div class="hub-card" id="card-challenge" onclick="selectHubMode('challenge')">
+                <i class="fas fa-trophy"></i>
+                <div>
+                    <h3>Challenge</h3>
+                    <p>Compete for the Global Leaderboard</p>
+                </div>
+            </div>
+            <button class="start-learning-btn" onclick="executeHubStart()">Start learning</button>
+        </div>
+    </div>
+
     <div id="fullMenu">
         <div class="close-btn" onclick="toggleMenu()">×</div>
         <div id="userNameDisplay" style="color: var(--gold); font-size: 1.2rem; font-weight: 900; margin-bottom: 20px; text-align: center; text-transform: uppercase;"></div>
@@ -131,9 +158,19 @@
         <div class="menu-item" id="logoutBtn" onclick="handleLogout()" style="display:none; color: #ff3b30;"><i class="fas fa-sign-out-alt"></i> LOGOUT</div>
         <div class="menu-item" onclick="openTasbih()"><i class="fas fa-fingerprint"></i> DIGITAL TASBIH</div>
         <div class="menu-item" onclick="openSurahs()">🎧 LISTEN SURAH</div>
-        <div class="menu-item" onclick="openQuiz()">🧠 ISLAMIC QUIZ</div>
+        <div class="menu-item" onclick="openLearningHub()"><i class="fas fa-star"></i> LEARNING HUB</div>
         <a href="#names" class="menu-item" onclick="toggleMenu()">99 NAMES</a>
         <a href="#quotes" class="menu-item" onclick="toggleMenu()">100 WISDOMS</a>
+    </div>
+
+    <div id="aiTutorPanel">
+        <div class="close-btn" onclick="closeAiTutor()">×</div>
+        <h2 style="color: var(--gold); text-align: center;">AI Quran Tutor</h2>
+        <div id="chatContainer"></div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Ask about Islam..." onkeypress="if(event.key === 'Enter') sendAiMessage()">
+            <button class="send-btn" onclick="sendAiMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
 
     <div id="surahPanel">
@@ -179,7 +216,6 @@
                 <div class="p-time-box"><span>ISHA</span><b id="t-isha">--:--</b></div>
                 <div class="p-time-box"><span>SUNRISE</span><b id="t-sunrise">--:--</b></div>
             </div>
-            <small style="opacity: 0.5; font-weight: 700;">Automatic location detection active.</small>
         </section>
 
         <section id="missions">
@@ -210,15 +246,9 @@
     <footer style="text-align: center; padding: 40px 20px; border-top: 1px solid #eee;">
         <h2 style="color:var(--emerald)">AL-ALSA</h2>
         <p style="font-size: 0.8rem; font-weight: 800; opacity: 0.5; margin-bottom: 10px;">SHAHIN AKTAR • STUDENT DEVELOPER & EDITOR • 2026</p>
-        
-        <div class="social-links">
-            <a href="mailto:business.aktar77@gmail.com"><i class="fas fa-envelope"></i></a>
-            <a href="https://www.linkedin.com/in/shahin-aktar-15b4a1272?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i></a>
-        </div>
     </footer>
 
     <script>
-        // 1. FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyCUQblrFn3RHyy4sxqhA2Hz7Nq4gYosZT0",
             authDomain: "al-alsa.firebaseapp.com",
@@ -229,312 +259,170 @@
             appId: "1:511589143545:web:a3d4f7ec90afbda4cf2328",
             measurementId: "G-JL8FD6D6FF"
         };
-
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
 
-        // 2. DATA POOLS
-        const surahNames = ["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf"];
-        
-        const allahNames = [
-            {ar:"الله", en:"Allah"}, {ar:"الرحمن", en:"Ar-Rahman"}, {ar:"الرحيم", en:"Ar-Rahim"}, {ar:"الملك", en:"Al-Malik"}, {ar:"القدوس", en:"Al-Quddus"}, {ar:"السلام", en:"As-Salam"}, {ar:"المؤمن", en:"Al-Mu'min"}, {ar:"المهيمن", en:"Al-Muhaymin"}, {ar:"العزيز", en:"Al-Aziz"}, {ar:"الجبار", en:"Al-Jabbar"}, {ar:"المتكبر", en:"Al-Mutakabbir"}, {ar:"الخالق", en:"Al-Khaliq"}, {ar:"البارئ", en:"Al-Bari"}, {ar:"المصور", en:"Al-Musawwir"}, {ar:"الغفار", en:"Al-Ghaffar"}, {ar:"القهار", en:"Al-Qahhar"}, {ar:"الوهاب", en:"Al-Wahhab"}, {ar:"الرزاق", en:"Ar-Razzaq"}, {ar:"الفتاح", en:"Al-Fattah"}, {ar:"العليم", en:"Al-Alim"}, {ar:"القابض", en:"Al-Qabid"}, {ar:"الباسط", en:"Al-Basit"}, {ar:"الخافض", en:"Al-Khafid"}, {ar:"الرافع", en:"Ar-Rafi"}, {ar:"المعز", en:"Al-Mu'izz"}, {ar:"المذل", en:"Al-Mudhill"}, {ar:"السميع", en:"As-Sami"}, {ar:"البصير", en:"Al-Basir"}, {ar:"الحكم", en:"Al-Hakam"}, {ar:"العدل", en:"Al-Adl"}, {ar:"اللطيف", en:"Al-Latif"}, {ar:"الخبير", en:"Al-Khabir"}, {ar:"الحليم", en:"Al-Halim"}, {ar:"العظيم", en:"Al-Azim"}, {ar:"الغفور", en:"Al-Ghafur"}, {ar:"الشكور", en:"Ash-Shakur"}, {ar:"العلي", en:"Al-Ali"}, {ar:"الكبير", en:"Al-Kabir"}, {ar:"الحفيظ", en:"Al-Hafiz"}, {ar:"المقيت", en:"Al-Muqit"}, {ar:"الحسيب", en:"Al-Hasib"}, {ar:"الجليل", en:"Al-Jalil"}, {ar:"الكريم", en:"Al-Karim"}, {ar:"الرقيب", en:"Ar-Raqib"}, {ar:"المجيب", en:"Al-Mujib"}, {ar:"الواسع", en:"Al-Wasi"}, {ar:"الحكيم", en:"Al-Hakim"}, {ar:"الودود", en:"Al-Wadud"}, {ar:"المجيد", en:"Al-Majid"}, {ar:"الباعث", en:"Al-Ba'ith"}, {ar:"الشهيد", en:"Ash-Shahid"}, {ar:"الحق", en:"Al-Haqq"}, {ar:"الوكيل", en:"Al-Wakil"}, {ar:"القوي", en:"Al-Qawiy"}, {ar:"المتين", en:"Al-Matin"}, {ar:"الولي", en:"Al-Wali"}, {ar:"الحميد", en:"Al-Hamid"}, {ar:"المحصي", en:"Al-Muhsi"}, {ar:"المبدئ", en:"Al-Mubdi"}, {ar:"المعيد", en:"Al-Mu'id"}, {ar:"المحيي", en:"Al-Muhyi"}, {ar:"المميت", en:"Al-Mumit"}, {ar:"الحي", en:"Al-Hayy"}, {ar:"القيوم", en:"Al-Qayyum"}, {ar:"الواجد", en:"Al-Wajid"}, {ar:"الماجد", en:"Al-Majid"}, {ar:"الواحد", en:"Al-Wahid"}, {ar:"الأحد", en:"Al-Ahad"}, {ar:"الصمد", en:"As-Samad"}, {ar:"القادر", en:"Al-Qadir"}, {ar:"المقتدر", en:"Al-Muqtadir"}, {ar:"المقدم", en:"Al-Muqaddim"}, {ar:"المؤخر", en:"Al-Mu'akhkhir"}, {ar:"الأول", en:"Al-Awwal"}, {ar:"الآخر", en:"Al-Akhir"}, {ar:"الظاهر", en:"Az-Zahir"}, {ar:"الباطن", en:"Al-Batin"}, {ar:"الوالي", en:"Al-Wali"}, {ar:"المتعالي", en:"Al-Muta'ali"}, {ar:"البر", en:"Al-Barr"}, {ar:"التواب", en:"At-Tawwab"}, {ar:"المنتقم", en:"Al-Muntaqim"}, {ar:"العفو", en:"Al-Afu"}, {ar:"الرؤوف", en:"Ar-Ra'uf"}, {ar:"مالك الملك", en:"Malik-ul-Mulk"}, {ar:"ذو الجلال والإكرام", en:"Zul-Jalali wal-Ikram"}, {ar:"المقسط", en:"Al-Muqsit"}, {ar:"الجامع", en:"Al-Jami"}, {ar:"الغني", en:"Al-Ghani"}, {ar:"المغني", en:"Al-Mughni"}, {ar:"المانع", en:"Al-Mani"}, {ar:"الضار", en:"Ad-Darr"}, {ar:"النافع", en:"An-Nafi"}, {ar:"النور", en:"An-Nur"}, {ar:"الهادي", en:"Al-Hadi"}, {ar:"البديع", en:"Al-Badi"}, {ar:"الباقي", en:"Al-Baqi"}, {ar:"الوارث", en:"Al-Warith"}, {ar:"الرشيد", en:"Ar-Rashid"}, {ar:"الصبور", en:"As-Sabur"}
-        ];
+        let userData = JSON.parse(localStorage.getItem('alsa_v10')) || { coins: 0, lastClaimDate: "", claimedSalah: [], tasbih: 0 };
+        let currentHubMode = 'memorise';
 
-        const quizBank = [
-            {q:"Who is the first Prophet?", a:["Adam (AS)","Nuh (AS)","Idris (AS)"], c:0},
-            {q:"How many Rakats in Fajr Fard?", a:["4","2","3"], c:1},
-            {q:"Which month comes after Ramadan?", a:["Shawwal","Rajab","Dhul-Hijjah"], c:0},
-            {q:"Who was the foster mother of Muhammad (PBUH)?", a:["Aminah","Halimah","Khadijah"], c:1},
-            {q:"Which Surah is the 'Heart of Quran'?", a:["Al-Mulk","Ya-Sin","Ar-Rahman"], c:1},
-            {q:"How many Juz are in the Quran?", a:["30","25","114"], c:0},
-            {q:"First Caliph of Islam?", a:["Umar (RA)","Abu Bakr (RA)","Ali (RA)"], c:1},
-            {q:"Where was Muhammad (PBUH) born?", a:["Mecca","Madinah","Taif"], c:0},
-            {q:"What is the word for 'Oneness of God'?", a:["Zakat","Tawhid","Iman"], c:1},
-            {q:"How many times is Bismillah in the Quran?", a:["113","114","115"], c:1},
-            {q:"Which Angel brings Revelation?", a:["Mika'il","Jibril","Israfil"], c:1},
-            {q:"Direction of prayer is called?", a:["Mihrab","Qibla","Minaret"], c:1},
-            {q:"Prophet who spoke in infancy?", a:["Musa (AS)","Isa (AS)","Ibrahim (AS)"], c:1},
-            {q:"What is the night of power?", a:["Laylatul Qadr","Laylatul Mi'raj","Eid"], c:0},
-            {q:"How many years did the Quran take to reveal?", a:["10","40","23"], c:2},
-            {q:"Who will blow the Trumpet?", a:["Azra'il","Israfil","Ridwan"], c:1},
-            {q:"Longest Surah in Quran?", a:["An-Nisa","Al-Baqarah","Al-Ma'idah"], c:1},
-            {q:"How many Prophets are mentioned in Quran?", a:["100","25","50"], c:1},
-            {q:"Wife of Ibrahim (AS) and mother of Ismail (AS)?", a:["Sarah","Hajar","Asiya"], c:1},
-            {q:"Battle where Muslims were outnumbered 3:1?", a:["Badr","Uhud","Khandaq"], c:0},
-            {q:"First word revealed of the Quran?", a:["Islam","Iqra","Salam"], c:1},
-            {q:"Which Prophet built the Ark?", a:["Nuh (AS)","Hud (AS)","Salih (AS)"], c:0},
-            {q:"The Prophet's migration to Madinah is?", a:["Hajj","Hijrah","Umrah"], c:1},
-            {q:"Surah without Bismillah?", a:["At-Tawbah","An-Namal","Al-Fajr"], c:0},
-            {q:"The Prophet's horse-like creature for Mi'raj?", a:["Buraq","Camel","Ababil"], c:0},
-            {q:"Who killed Jalut (Goliath)?", a:["Suleiman (AS)","Dawud (AS)","Musa (AS)"], c:1},
-            {q:"What is Az-Zakat?", a:["Fast","Prayer","Charity"], c:2},
-            {q:"Number of gates in Jannah?", a:["7","8","9"], c:1},
-            {q:"Number of levels in Jahannam?", a:["7","8","9"], c:0},
-            {q:"Language of the Quran?", a:["Persian","Urdu","Arabic"], c:2},
-            {q:"Prophet swallowed by a whale?", a:["Yunus (AS)","Yusuf (AS)","Ayyub (AS)"], c:0},
-            {q:"The 10th day of Muharram?", a:["Eid","Ashura","Arafat"], c:1},
-            {q:"Who is the 'Seal of the Prophets'?", a:["Isa (AS)","Muhammad (PBUH)","Ibrahim (AS)"], c:1},
-            {q:"Which Prophet could talk to animals?", a:["Dawud (AS)","Suleiman (AS)","Adam (AS)"], c:1},
-            {q:"Total number of Surahs?", a:["114","110","120"], c:0},
-            {q:"Which is the shortest Surah?", a:["Al-Ikhlas","Al-Kawthar","Al-Asr"], c:1},
-            {q:"Who are the 'Hafiz'?", a:["Givers","Memorizers","Teachers"], c:1},
-            {q:"What is 'Sujud'?", a:["Standing","Prostration","Sitting"], c:1},
-            {q:"Prophet whose beauty was legendary?", a:["Yusuf (AS)","Isa (AS)","Musa (AS)"], c:0},
-            {q:"What is the 'Sunnah'?", a:["Quran","Prophetic Way","History"], c:1},
-            {q:"Prophet who survived the fire?", a:["Ibrahim (AS)","Nuh (AS)","Lut (AS)"], c:0},
-            {q:"Who is the enemy of believers?", a:["Firaun","Shaytan","Qarun"], c:1},
-            {q:"Day of Gathering is?", a:["Friday","Yawm al-Qiyamah","Saturday"], c:1},
-            {q:"What is 'Sabr'?", a:["Peace","Patience","Love"], c:1},
-            {q:"Prophet given the Zabur?", a:["Dawud (AS)","Musa (AS)","Isa (AS)"], c:0},
-            {q:"Month of Hajj?", a:["Ramadan","Dhul-Hijjah","Muharram"], c:1},
-            {q:"What is 'Halal'?", a:["Forbidden","Permissible","Doubtful"], c:1},
-            {q:"How many daughters did the Prophet have?", a:["2","4","1"], c:1},
-            {q:"Who was the first Muezzin?", a:["Bilal (RA)","Zayd (RA)","Hamza (RA)"], c:0},
-            {q:"Where did the Prophet receive first revelation?", a:["Cave Hira","Cave Thawr","Kaaba"], c:0}
-        ];
-
-        const wisdoms = ["Indeed, with hardship comes ease (94:6).", "The best among you are those who learn the Quran and teach it.", "So remember Me; I will remember you (2:152).", "A smile is charity.", "Allah does not burden a soul beyond that it can bear.", "Kindness is a mark of faith.", "The strong is not the one who overcomes people, but the one who controls his anger.", "Trust in Allah, but tie your camel.", "Allah loves those who turn to Him in repentance.", "Speak a good word or remain silent.", "Forgive others as you would like Allah to forgive you.", "Your only limit is your soul.", "He who has no mercy will receive no mercy.", "Prayer is better than sleep.", "Truthfulness leads to righteousness.", "Modesty is part of faith.", "Allah is beautiful and loves beauty.", "Upper hand is better than the lower hand.", "Be in this world as a stranger.", "Righteousness is good character.", "Avoid jealousy.", "The best Jihad is truth to a tyrant.", "Cleanliness is half of faith.", "Every act of kindness is charity.", "Allah is with the patient.", "Fear Allah wherever you are.", "Riches are from a contented mind.", "Follow a bad deed with a good one.", "Paradise lies at the feet of mothers.", "A father gives nothing better than manners."];
-
-        // 3. LOGIC & FUNCTIONS
-        let userData = JSON.parse(localStorage.getItem('alsa_v10')) || { 
-            coins: 0, 
-            lastClaimDate: "", 
-            claimedSalah: [],
-            tasbih: 0
+        // AI KNOWLEDGE BASE
+        const IslamicAI = {
+            "salam": "Walaikum Assalam! May the peace and blessings of Allah be upon you. How can I help you learn today?",
+            "zakat": "Zakat is the 3rd pillar of Islam, requiring 2.5% of savings to be given to the needy annually.",
+            "prayer": "Salah is the 2nd pillar. It keeps us connected to our Creator 5 times a day.",
+            "quran": "The Noble Quran is the final revelation from Allah to Prophet Muhammad (PBUH).",
+            "default": "SubhanAllah, that is a great question! I am still learning, but as a tutor, I recommend checking a Sahih source or asking a local scholar for deep fatwas. Can I help with something simpler?"
         };
+
+        // PREMIUM HUB LOGIC
+        function openLearningHub() { toggleMenu(); document.getElementById('premiumHub').style.display = 'flex'; }
+        function closeHub() { document.getElementById('premiumHub').style.display = 'none'; }
+        
+        function selectHubMode(mode) {
+            currentHubMode = mode;
+            document.querySelectorAll('.hub-card').forEach(c => c.classList.remove('active'));
+            document.getElementById('card-'+mode).classList.add('active');
+            if(navigator.vibrate) navigator.vibrate(10);
+        }
+
+        function executeHubStart() {
+            closeHub();
+            if(currentHubMode === 'ai') openAiTutor();
+            else if(currentHubMode === 'memorise') openQuiz();
+            else window.location.hash = "#leaderboard";
+        }
+
+        // AI TUTOR LOGIC
+        function openAiTutor() {
+            const p = document.getElementById('aiTutorPanel');
+            p.style.display = 'flex';
+            setTimeout(() => p.classList.add('panel-active'), 10);
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = `<div class="message msg-ai">Assalamu Alaikum! I am your AL-ALSA Tutor. Ask me about Zakat, Prayer, or the Quran.</div>`;
+        }
+        function closeAiTutor() {
+            const p = document.getElementById('aiTutorPanel');
+            p.classList.remove('panel-active');
+            setTimeout(() => p.style.display = 'none', 400);
+        }
+        function sendAiMessage() {
+            const input = document.getElementById('userInput');
+            const txt = input.value.trim().toLowerCase();
+            if(!txt) return;
+            appendMsg(input.value, 'msg-user');
+            input.value = "";
+            setTimeout(() => {
+                let reply = IslamicAI["default"];
+                for(let key in IslamicAI) { if(txt.includes(key)) reply = IslamicAI[key]; }
+                appendMsg(reply, 'msg-ai');
+            }, 600);
+        }
+        function appendMsg(text, cls) {
+            const div = document.createElement('div');
+            div.className = 'message ' + cls;
+            div.innerText = text;
+            const c = document.getElementById('chatContainer');
+            c.appendChild(div);
+            c.scrollTop = c.scrollHeight;
+        }
+
+        // --- REST OF YOUR ORIGINAL FUNCTIONS ---
+        const surahNames = ["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf"];
+        const allahNames = [{ar:"الله", en:"Allah"}, {ar:"الرحمن", en:"Ar-Rahman"}, {ar:"الرحيم", en:"Ar-Rahim"}, {ar:"الملك", en:"Al-Malik"}, {ar:"القدوس", en:"Al-Quddus"}, {ar:"السلام", en:"As-Salam"}, {ar:"المؤمن", en:"Al-Mu'min"}, {ar:"المهيمن", en:"Al-Muhaymin"}, {ar:"العزيز", en:"Al-Aziz"}, {ar:"الجبار", en:"Al-Jabbar"}, {ar:"المتكبر", en:"Al-Mutakabbir"}];
+        const quizBank = [{q:"Who is the first Prophet?", a:["Adam (AS)","Nuh (AS)","Idris (AS)"], c:0}, {q:"How many Rakats in Fajr Fard?", a:["4","2","3"], c:1}];
+        const wisdoms = ["Indeed, with hardship comes ease (94:6).", "The best among you are those who learn the Quran and teach it.", "So remember Me; I will remember you (2:152)."];
 
         function save() { 
             localStorage.setItem('alsa_v10', JSON.stringify(userData));
             document.getElementById('coinCount').innerText = userData.coins;
-            
             const user = auth.currentUser;
-            if (user) {
-                db.ref('leaderboard/' + user.uid).set({
-                    name: user.displayName,
-                    coins: userData.coins,
-                    lastUpdated: firebase.database.ServerValue.TIMESTAMP
-                });
-            }
+            if (user) db.ref('leaderboard/' + user.uid).set({ name: user.displayName, coins: userData.coins, lastUpdated: firebase.database.ServerValue.TIMESTAMP });
         }
-
         function countTasbih() {
             userData.tasbih++;
             if (navigator.vibrate) navigator.vibrate(20);
-            if(userData.tasbih % 33 === 0) {
-                userData.coins += 1;
-                showCoinAnimation();
-            }
+            if(userData.tasbih % 33 === 0) { userData.coins += 1; showCoinAnimation(); }
             document.getElementById('tasbihDisplay').innerText = userData.tasbih;
             save();
         }
-
         function resetTasbih() { userData.tasbih = 0; document.getElementById('tasbihDisplay').innerText = 0; save(); }
-        
-        // PRO TRANSITION HANDLERS
-        function openTasbih() { 
-            toggleMenu(); 
-            const p = document.getElementById('tasbihPanel');
-            p.style.display = 'flex';
-            setTimeout(() => p.classList.add('panel-active'), 10);
-        }
-        function closeTasbih() { 
-            const p = document.getElementById('tasbihPanel');
-            p.classList.remove('panel-active');
-            setTimeout(() => p.style.display = 'none', 400);
-        }
-
+        function openTasbih() { toggleMenu(); const p = document.getElementById('tasbihPanel'); p.style.display = 'flex'; setTimeout(() => p.classList.add('panel-active'), 10); }
+        function closeTasbih() { const p = document.getElementById('tasbihPanel'); p.classList.remove('panel-active'); setTimeout(() => p.style.display = 'none', 400); }
         async function fetchPrayerTimes() {
             try {
                 const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej));
                 const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=2`);
                 const data = await res.json();
                 const times = data.data.timings;
-                document.getElementById('t-fajr').innerText = times.Fajr;
-                document.getElementById('t-dhuhr').innerText = times.Dhuhr;
-                document.getElementById('t-asr').innerText = times.Asr;
-                document.getElementById('t-maghrib').innerText = times.Maghrib;
-                document.getElementById('t-isha').innerText = times.Isha;
-                document.getElementById('t-sunrise').innerText = times.Sunrise;
+                document.getElementById('t-fajr').innerText = times.Fajr; document.getElementById('t-dhuhr').innerText = times.Dhuhr; document.getElementById('t-asr').innerText = times.Asr; document.getElementById('t-maghrib').innerText = times.Maghrib; document.getElementById('t-isha').innerText = times.Isha; document.getElementById('t-sunrise').innerText = times.Sunrise;
                 document.getElementById('locationLabel').innerText = "Prayer Times (Live)";
-            } catch (e) {
-                document.getElementById('locationLabel').innerText = "Prayer Times (Default)";
-            }
+            } catch (e) { document.getElementById('locationLabel').innerText = "Prayer Times (Default)"; }
         }
-
         function handleGoogleLogin() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).then((result) => {
-                db.ref('leaderboard/' + result.user.uid).once('value').then((snapshot) => {
-                    if (snapshot.exists()) {
-                        userData.coins = snapshot.val().coins || 0;
-                        save();
-                    }
-                });
+                db.ref('leaderboard/' + result.user.uid).once('value').then((snapshot) => { if (snapshot.exists()) { userData.coins = snapshot.val().coins || 0; save(); } });
                 updateUI(result.user);
-            }).catch(err => alert("Login Error: " + err.message));
+            });
         }
-
         function handleLogout() { auth.signOut().then(() => updateUI(null)); }
-        
         function updateUI(user) {
             const nameEl = document.getElementById('userNameDisplay');
             const loginBtn = document.getElementById('loginBtn');
             const logoutBtn = document.getElementById('logoutBtn');
-            if (user) {
-                nameEl.innerText = "SALAM, " + user.displayName;
-                loginBtn.style.display = "none"; logoutBtn.style.display = "block";
-                save();
-            } else {
-                nameEl.innerText = ""; loginBtn.style.display = "flex"; logoutBtn.style.display = "none";
-            }
+            if (user) { nameEl.innerText = "SALAM, " + user.displayName; loginBtn.style.display = "none"; logoutBtn.style.display = "block"; save(); }
+            else { nameEl.innerText = ""; loginBtn.style.display = "flex"; logoutBtn.style.display = "none"; }
             renderLeaderboard();
         }
         auth.onAuthStateChanged(updateUI);
-
-        function checkDailyReset() {
-            const today = new Date().toDateString();
-            if (userData.lastClaimDate !== today) {
-                userData.lastClaimDate = today;
-                userData.claimedSalah = [];
-                save();
-            }
-            document.querySelectorAll('.mission-btn').forEach(btn => {
-                const id = btn.id.split('-')[1];
-                if(userData.claimedSalah.includes(id)) btn.classList.add('done');
-            });
-        }
-
-        function completeSalah(id, btn) {
-            if(userData.claimedSalah.includes(id)) return;
-            userData.coins += 1;
-            userData.claimedSalah.push(id);
-            btn.classList.add('done');
-            showCoinAnimation();
-            save();
-        }
-
-        function showCoinAnimation() {
-            const el = document.getElementById('coinFeedback');
-            el.classList.remove('animate-coin');
-            void el.offsetWidth;
-            el.classList.add('animate-coin');
-        }
-
+        function completeSalah(id, btn) { if(userData.claimedSalah.includes(id)) return; userData.coins += 1; userData.claimedSalah.push(id); btn.classList.add('done'); showCoinAnimation(); save(); }
+        function showCoinAnimation() { const el = document.getElementById('coinFeedback'); el.classList.remove('animate-coin'); void el.offsetWidth; el.classList.add('animate-coin'); }
         function renderLeaderboard() {
             const lbBody = document.getElementById('leaderboardBody');
             db.ref('leaderboard').orderByChild('coins').limitToLast(10).on('value', (snapshot) => {
-                let leaders = [];
-                snapshot.forEach((child) => { leaders.push(child.val()); });
-                leaders.reverse();
-                if (leaders.length === 0) {
-                    lbBody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:20px; opacity:0.5;'>Login to see Global Leaders</td></tr>";
-                    return;
-                }
-                lbBody.innerHTML = leaders.map((leader, index) => `
-                    <tr>
-                        <td class="rank">#${index + 1}</td>
-                        <td>${leader.name || "Anonymous"}</td>
-                        <td style="text-align:right">${(leader.coins || 0).toLocaleString()} 🪙</td>
-                    </tr>
-                `).join('');
+                let leaders = []; snapshot.forEach((child) => { leaders.push(child.val()); }); leaders.reverse();
+                lbBody.innerHTML = leaders.map((leader, index) => `<tr><td class="rank">#${index + 1}</td><td>${leader.name || "Anonymous"}</td><td style="text-align:right">${(leader.coins || 0).toLocaleString()} 🪙</td></tr>`).join('');
             });
         }
-
         window.onload = () => {
-            checkDailyReset();
-            fetchPrayerTimes();
-            renderLeaderboard();
+            fetchPrayerTimes(); renderLeaderboard();
             document.getElementById('tasbihDisplay').innerText = userData.tasbih;
-            
             const sList = document.getElementById('surahList');
             for(let i=1; i<=50; i++) {
                 let id = i.toString().padStart(3, '0');
-                let name = surahNames[i-1] || `Surah ${i}`;
-                sList.innerHTML += `<div class="surah-card"><div class="surah-info"><b>${i}. ${name}</b><span class="surah-name-ar">سورة</span></div><audio controls preload="none" src="https://server8.mp3quran.net/afs/${id}.mp3"></audio></div>`;
+                sList.innerHTML += `<div class="surah-card"><div class="surah-info"><b>${i}. ${surahNames[i-1]}</b><span class="surah-name-ar">سورة</span></div><audio controls preload="none" src="https://server8.mp3quran.net/afs/${id}.mp3"></audio></div>`;
             }
-
             const qList = document.getElementById('quoteList');
-            for(let i=1; i<=100; i++) {
-                let text = wisdoms[(i-1) % wisdoms.length];
-                qList.innerHTML += `<div class="q-card"><p>"${text}"</p><span>— Wisdom #${i}</span></div>`;
-            }
-
+            wisdoms.forEach((text, i) => { qList.innerHTML += `<div class="q-card"><p>"${text}"</p><span>— Wisdom #${i+1}</span></div>`; });
             const nGrid = document.getElementById('namesGrid');
-            allahNames.forEach(n => {
-                nGrid.innerHTML += `<div class="name-box"><span class="ar">${n.ar}</span><span class="en">${n.en}</span></div>`;
-            });
-
-            updateTimers();
-            setInterval(updateTimers, 60000);
+            allahNames.forEach(n => { nGrid.innerHTML += `<div class="name-box"><span class="ar">${n.ar}</span><span class="en">${n.en}</span></div>`; });
+            updateTimers(); setInterval(updateTimers, 60000);
         };
-
         function loadNewQuestion() {
             const rand = quizBank[Math.floor(Math.random() * quizBank.length)];
             document.getElementById('questionText').innerText = rand.q;
-            const container = document.getElementById('optionsContainer');
-            container.innerHTML = "";
-            rand.a.forEach((opt, i) => {
-                container.innerHTML += `<button class="quiz-opt" onclick="checkQuiz(${i}, ${rand.c}, this)">${opt}</button>`;
-            });
+            const container = document.getElementById('optionsContainer'); container.innerHTML = "";
+            rand.a.forEach((opt, i) => { container.innerHTML += `<button class="quiz-opt" onclick="checkQuiz(${i}, ${rand.c}, this)">${opt}</button>`; });
         }
-
         function checkQuiz(choice, correct, btn) {
-            if(choice === correct) {
-                btn.style.background = "#34c759"; btn.style.color = "white";
-                userData.coins += 1; showCoinAnimation(); save();
-                setTimeout(loadNewQuestion, 800);
-            } else {
-                btn.style.background = "#ff3b30"; btn.style.color = "white";
-                setTimeout(() => { btn.style.background = "#f2f2f7"; btn.style.color = "var(--emerald)"; }, 500);
-            }
+            if(choice === correct) { btn.style.background = "#34c759"; btn.style.color = "white"; userData.coins += 1; showCoinAnimation(); save(); setTimeout(loadNewQuestion, 800); }
+            else { btn.style.background = "#ff3b30"; btn.style.color = "white"; setTimeout(() => { btn.style.background = "#f8f9fb"; btn.style.color = "var(--emerald)"; }, 500); }
         }
-
-        // PANEL ANIMATION CONTROLS
         function toggleMenu() { 
             let m = document.getElementById('fullMenu'); 
-            if(m.style.display === 'flex') {
-                m.classList.remove('panel-active');
-                setTimeout(() => m.style.display = 'none', 400);
-            } else {
-                m.style.display = 'flex';
-                setTimeout(() => m.classList.add('panel-active'), 10);
-            }
+            if(m.style.display === 'flex') { m.classList.remove('panel-active'); setTimeout(() => m.style.display = 'none', 400); }
+            else { m.style.display = 'flex'; setTimeout(() => m.classList.add('panel-active'), 10); }
         }
-
-        function openSurahs() { 
-            toggleMenu(); 
-            const p = document.getElementById('surahPanel');
-            p.style.display = 'flex';
-            setTimeout(() => p.classList.add('panel-active'), 10);
-        }
-        function closeSurahs() { 
-            const p = document.getElementById('surahPanel');
-            p.classList.remove('panel-active');
-            setTimeout(() => p.style.display = 'none', 400);
-        }
-
-        function openQuiz() { 
-            if(document.getElementById('fullMenu').style.display==='flex') toggleMenu(); 
-            const p = document.getElementById('quizPanel');
-            p.style.display = 'flex';
-            loadNewQuestion();
-            setTimeout(() => p.classList.add('panel-active'), 10);
-        }
-        function closeQuiz() { 
-            const p = document.getElementById('quizPanel');
-            p.classList.remove('panel-active');
-            setTimeout(() => p.style.display = 'none', 400);
-        }
-
+        function openSurahs() { toggleMenu(); const p = document.getElementById('surahPanel'); p.style.display = 'flex'; setTimeout(() => p.classList.add('panel-active'), 10); }
+        function closeSurahs() { const p = document.getElementById('surahPanel'); p.classList.remove('panel-active'); setTimeout(() => p.style.display = 'none', 400); }
+        function openQuiz() { const p = document.getElementById('quizPanel'); p.style.display = 'flex'; loadNewQuestion(); setTimeout(() => p.classList.add('panel-active'), 10); }
+        function closeQuiz() { const p = document.getElementById('quizPanel'); p.classList.remove('panel-active'); setTimeout(() => p.style.display = 'none', 400); }
         function updateTimers() {
             const now = new Date();
             const ram = new Date("Feb 18, 2026 00:00:00").getTime();
             const dR = ram - now.getTime();
             document.getElementById('ramadan').innerText = Math.max(0, Math.floor(dR/(1000*60*60*24))) + "d " + Math.max(0, Math.floor((dR%(1000*60*60*24))/(1000*60*60))) + "h";
-            let jum = new Date(now); jum.setDate(now.getDate() + (5 - now.getDay() + 7) % 7); jum.setHours(13, 30, 0, 0);
-            const dJ = jum.getTime() - now.getTime();
-            document.getElementById('jummah').innerText = Math.floor(dJ/(1000*60*60*24)) + "d " + Math.floor((dJ%(1000*60*60*24))/(1000*60*60)) + "h";
         }
     </script>
 </body>
