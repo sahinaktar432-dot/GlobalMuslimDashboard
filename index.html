@@ -206,6 +206,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyCUQblrFn3RHyy4sxqhA2Hz7Nq4gYosZT0",
             authDomain: "al-alsa.firebaseapp.com",
+            databaseURL: "https://al-alsa-default-rtdb.firebaseio.com/",
             projectId: "al-alsa",
             storageBucket: "al-alsa.firebasestorage.app",
             messagingSenderId: "511589143545",
@@ -309,8 +310,11 @@
             document.getElementById('tasbihDisplay').innerText = userData.tasbih;
             save();
         }
+
         function resetTasbih() { userData.tasbih = 0; document.getElementById('tasbihDisplay').innerText = 0; save(); }
+        
         function openTasbih() { toggleMenu(); document.getElementById('tasbihPanel').style.display = 'flex'; }
+        
         function closeTasbih() { document.getElementById('tasbihPanel').style.display = 'none'; }
 
         // Feature: Real Prayer Times API
@@ -346,6 +350,7 @@
                 updateUI(result.user);
             }).catch(err => alert("Login Error: " + err.message));
         }
+
         function handleLogout() { auth.signOut().then(() => updateUI(null)); }
         
         function updateUI(user) {
@@ -470,9 +475,13 @@
         }
 
         function toggleMenu() { let m = document.getElementById('fullMenu'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
+        
         function openSurahs() { toggleMenu(); document.getElementById('surahPanel').style.display = 'block'; }
+        
         function closeSurahs() { document.getElementById('surahPanel').style.display = 'none'; }
+        
         function openQuiz() { if(document.getElementById('fullMenu').style.display==='flex') toggleMenu(); document.getElementById('quizPanel').style.display = 'block'; loadNewQuestion(); }
+        
         function closeQuiz() { document.getElementById('quizPanel').style.display = 'none'; }
 
         function updateTimers() {
