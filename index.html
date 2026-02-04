@@ -1,4 +1,4 @@
-                            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,6 +10,7 @@
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
@@ -214,6 +215,7 @@
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const db = firebase.database(); // Initialized Database
 
         // 2. DATA POOLS
         const surahNames = ["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf"];
@@ -281,18 +283,25 @@
             tasbih: 0
         };
 
+        // UPDATED SAVE: Syncs to Firebase Database
         function save() { 
             localStorage.setItem('alsa_v10', JSON.stringify(userData));
             document.getElementById('coinCount').innerText = userData.coins;
-            renderLeaderboard(); // Update display when coins change
+            
+            const user = auth.currentUser;
+            if (user) {
+                db.ref('leaderboard/' + user.uid).set({
+                    name: user.displayName,
+                    coins: userData.coins,
+                    lastUpdated: firebase.database.ServerValue.TIMESTAMP
+                });
+            }
         }
 
         // Feature: Digital Tasbih
         function countTasbih() {
             userData.tasbih++;
-            // Haptic Feedback simulation (short vibrate on mobile)
             if (navigator.vibrate) navigator.vibrate(20);
-            
             if(userData.tasbih % 33 === 0) {
                 userData.coins += 1;
                 showCoinAnimation();
@@ -326,9 +335,19 @@
         // AUTH & UI
         function handleGoogleLogin() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then((result) => updateUI(result.user)).catch(err => alert("Login Error: " + err.message));
+            auth.signInWithPopup(provider).then((result) => {
+                // Pull existing coins from DB if they exist
+                db.ref('leaderboard/' + result.user.uid).once('value').then((snapshot) => {
+                    if (snapshot.exists()) {
+                        userData.coins = snapshot.val().coins || 0;
+                        save();
+                    }
+                });
+                updateUI(result.user);
+            }).catch(err => alert("Login Error: " + err.message));
         }
         function handleLogout() { auth.signOut().then(() => updateUI(null)); }
+        
         function updateUI(user) {
             const nameEl = document.getElementById('userNameDisplay');
             const loginBtn = document.getElementById('loginBtn');
@@ -336,9 +355,11 @@
             if (user) {
                 nameEl.innerText = "SALAM, " + user.displayName;
                 loginBtn.style.display = "none"; logoutBtn.style.display = "block";
+                save();
             } else {
                 nameEl.innerText = ""; loginBtn.style.display = "block"; logoutBtn.style.display = "none";
             }
+            renderLeaderboard();
         }
         auth.onAuthStateChanged(updateUI);
 
@@ -371,30 +392,30 @@
             el.classList.add('animate-coin');
         }
 
-        // DYNAMIC TOP 10 LEADERBOARD
+        // UPDATED DYNAMIC TOP 10 LEADERBOARD (REAL DATA)
         function renderLeaderboard() {
             const lbBody = document.getElementById('leaderboardBody');
-            // Sample data - You can replace this with a Firebase pull later
-            const leaders = [
-                { name: "Shahin Aktar (Admin)", coins: 1500 + userData.coins },
-                { name: "Ahmad Khan", coins: 820 },
-                { name: "Fatima Zahra", coins: 750 },
-                { name: "Zaid Omar", coins: 690 },
-                { name: "Maryam Ali", coins: 610 },
-                { name: "Ibrahim Noor", coins: 550 },
-                { name: "Sana Sheikh", coins: 480 },
-                { name: "Hamza Yusuf", coins: 410 },
-                { name: "Layla Hasan", coins: 395 },
-                { name: "Bilal Habashi", coins: 320 }
-            ];
+            
+            db.ref('leaderboard').orderByChild('coins').limitToLast(10).on('value', (snapshot) => {
+                let leaders = [];
+                snapshot.forEach((child) => {
+                    leaders.push(child.val());
+                });
+                leaders.reverse();
 
-            lbBody.innerHTML = leaders.map((leader, index) => `
-                <tr>
-                    <td class="rank">#${index + 1}</td>
-                    <td>${leader.name}</td>
-                    <td style="text-align:right">${leader.coins.toLocaleString()} 🪙</td>
-                </tr>
-            `).join('');
+                if (leaders.length === 0) {
+                    lbBody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:20px; opacity:0.5;'>Login to see Global Leaders</td></tr>";
+                    return;
+                }
+
+                lbBody.innerHTML = leaders.map((leader, index) => `
+                    <tr>
+                        <td class="rank">#${index + 1}</td>
+                        <td>${leader.name || "Anonymous"}</td>
+                        <td style="text-align:right">${(leader.coins || 0).toLocaleString()} 🪙</td>
+                    </tr>
+                `).join('');
+            });
         }
 
         window.onload = () => {
