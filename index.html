@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+                            <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -70,13 +70,28 @@
         .p-time-box span { display: block; font-size: 0.7rem; font-weight: 800; color: var(--gold); }
         .p-time-box b { font-size: 0.9rem; color: var(--emerald); }
 
-        .tasbih-circle { width: 200px; height: 200px; border: 8px solid var(--gold); border-radius: 50%; margin: 40px auto; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: white; font-weight: 900; cursor: pointer; transition: 0.1s; }
-        .tasbih-circle:active { transform: scale(0.95); background: rgba(197, 160, 33, 0.2); }
+        /* UPGRADED TASBIH ANIMATION */
+        .tasbih-circle { 
+            width: 220px; height: 220px; 
+            border: 10px solid var(--gold); 
+            border-radius: 50%; margin: 40px auto; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 3.8rem; color: white; font-weight: 900; 
+            cursor: pointer; transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 0 rgba(197, 160, 33, 0);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .tasbih-circle:active { 
+            transform: scale(0.92); 
+            box-shadow: 0 0 30px rgba(197, 160, 33, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+        }
 
         .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .leaderboard-table tr { border-bottom: 1px solid #eee; }
         .leaderboard-table td { padding: 12px 5px; font-size: 0.9rem; font-weight: 700; }
-        .rank { color: var(--gold); width: 30px; }
+        .rank { color: var(--gold); width: 35px; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -123,7 +138,7 @@
         <h2 style="color: var(--gold); text-align: center;">Digital Tasbih</h2>
         <p style="color: white; text-align: center; opacity: 0.8; margin-top: 10px;">Tap circle to count. Earn 1 coin per 33 Dhikr.</p>
         <div class="tasbih-circle" onclick="countTasbih()" id="tasbihDisplay">0</div>
-        <button class="mission-btn" style="width: 150px; margin: 0 auto;" onclick="resetTasbih()">RESET</button>
+        <button class="mission-btn" style="width: 150px; margin: 0 auto; background: var(--white); color: var(--emerald);" onclick="resetTasbih()">RESET</button>
     </div>
 
     <div class="hero">
@@ -159,12 +174,9 @@
         </section>
 
         <section id="leaderboard">
-            <h2>Ummah Leaders</h2>
-            <table class="leaderboard-table">
-                <tr><td class="rank">#1</td><td>Shahin Aktar (Admin)</td><td style="text-align:right">999 🪙</td></tr>
-                <tr><td class="rank">#2</td><td>Ahmad Khan</td><td style="text-align:right">450 🪙</td></tr>
-                <tr><td class="rank">#3</td><td>Fatima Zahra</td><td style="text-align:right">380 🪙</td></tr>
-            </table>
+            <h2>Global Ummah Leaders (Top 10)</h2>
+            <table class="leaderboard-table" id="leaderboardBody">
+                </table>
         </section>
 
         <section id="names">
@@ -272,11 +284,15 @@
         function save() { 
             localStorage.setItem('alsa_v10', JSON.stringify(userData));
             document.getElementById('coinCount').innerText = userData.coins;
+            renderLeaderboard(); // Update display when coins change
         }
 
         // Feature: Digital Tasbih
         function countTasbih() {
             userData.tasbih++;
+            // Haptic Feedback simulation (short vibrate on mobile)
+            if (navigator.vibrate) navigator.vibrate(20);
+            
             if(userData.tasbih % 33 === 0) {
                 userData.coins += 1;
                 showCoinAnimation();
@@ -355,9 +371,36 @@
             el.classList.add('animate-coin');
         }
 
+        // DYNAMIC TOP 10 LEADERBOARD
+        function renderLeaderboard() {
+            const lbBody = document.getElementById('leaderboardBody');
+            // Sample data - You can replace this with a Firebase pull later
+            const leaders = [
+                { name: "Shahin Aktar (Admin)", coins: 1500 + userData.coins },
+                { name: "Ahmad Khan", coins: 820 },
+                { name: "Fatima Zahra", coins: 750 },
+                { name: "Zaid Omar", coins: 690 },
+                { name: "Maryam Ali", coins: 610 },
+                { name: "Ibrahim Noor", coins: 550 },
+                { name: "Sana Sheikh", coins: 480 },
+                { name: "Hamza Yusuf", coins: 410 },
+                { name: "Layla Hasan", coins: 395 },
+                { name: "Bilal Habashi", coins: 320 }
+            ];
+
+            lbBody.innerHTML = leaders.map((leader, index) => `
+                <tr>
+                    <td class="rank">#${index + 1}</td>
+                    <td>${leader.name}</td>
+                    <td style="text-align:right">${leader.coins.toLocaleString()} 🪙</td>
+                </tr>
+            `).join('');
+        }
+
         window.onload = () => {
             checkDailyReset();
             fetchPrayerTimes();
+            renderLeaderboard();
             document.getElementById('tasbihDisplay').innerText = userData.tasbih;
             
             const sList = document.getElementById('surahList');
