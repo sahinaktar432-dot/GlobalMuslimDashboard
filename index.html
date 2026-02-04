@@ -20,7 +20,7 @@
         nav { background: var(--emerald); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .logo { font-weight: 900; font-size: 1.4rem; letter-spacing: -1.2px; color: var(--gold); }
 
-        #fullMenu, #surahPanel, #quizPanel {
+        #fullMenu, #surahPanel, #quizPanel, #tasbihPanel {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--emerald); z-index: 5000; display: none; flex-direction: column;
             overflow-y: auto; padding: 40px 20px;
@@ -60,10 +60,23 @@
         .surah-name-ar { font-family: 'Amiri'; font-size: 1.2rem; color: var(--gold); }
         audio { width: 100%; height: 35px; margin-top: 5px; filter: invert(1); }
 
-        /* Social Link Styles */
         .social-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
         .social-links a { color: var(--emerald); text-decoration: none; font-size: 1.2rem; transition: 0.3s; }
         .social-links a:hover { color: var(--gold); }
+
+        /* New Feature Styles */
+        .prayer-times-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+        .p-time-box { background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee; }
+        .p-time-box span { display: block; font-size: 0.7rem; font-weight: 800; color: var(--gold); }
+        .p-time-box b { font-size: 0.9rem; color: var(--emerald); }
+
+        .tasbih-circle { width: 200px; height: 200px; border: 8px solid var(--gold); border-radius: 50%; margin: 40px auto; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: white; font-weight: 900; cursor: pointer; transition: 0.1s; }
+        .tasbih-circle:active { transform: scale(0.95); background: rgba(197, 160, 33, 0.2); }
+
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .leaderboard-table tr { border-bottom: 1px solid #eee; }
+        .leaderboard-table td { padding: 12px 5px; font-size: 0.9rem; font-weight: 700; }
+        .rank { color: var(--gold); width: 30px; }
     </style>
 </head>
 <body>
@@ -83,6 +96,7 @@
         <div id="userNameDisplay" style="color: var(--gold); font-size: 1.2rem; font-weight: 900; margin-bottom: 20px; text-align: center; text-transform: uppercase;"></div>
         <div class="menu-item" id="loginBtn" onclick="handleGoogleLogin()"><i class="fab fa-google"></i> GOOGLE LOGIN</div>
         <div class="menu-item" id="logoutBtn" onclick="handleLogout()" style="display:none; color: #ff3b30;"><i class="fas fa-sign-out-alt"></i> LOGOUT</div>
+        <div class="menu-item" onclick="openTasbih()"><i class="fas fa-fingerprint"></i> DIGITAL TASBIH</div>
         <div class="menu-item" onclick="openSurahs()">🎧 LISTEN SURAH</div>
         <div class="menu-item" onclick="openQuiz()">🧠 ISLAMIC QUIZ</div>
         <a href="#names" class="menu-item" onclick="toggleMenu()">99 NAMES</a>
@@ -104,6 +118,14 @@
         </div>
     </div>
 
+    <div id="tasbihPanel">
+        <div class="close-btn" onclick="closeTasbih()">×</div>
+        <h2 style="color: var(--gold); text-align: center;">Digital Tasbih</h2>
+        <p style="color: white; text-align: center; opacity: 0.8; margin-top: 10px;">Tap circle to count. Earn 1 coin per 33 Dhikr.</p>
+        <div class="tasbih-circle" onclick="countTasbih()" id="tasbihDisplay">0</div>
+        <button class="mission-btn" style="width: 150px; margin: 0 auto;" onclick="resetTasbih()">RESET</button>
+    </div>
+
     <div class="hero">
         <h1 style="font-family: 'Amiri'; font-size: 2.5rem; color: var(--gold);">بِسْمِ اللهِ</h1>
         <p style="font-weight: 900; text-transform: uppercase;">Global Muslim Dashboard</p>
@@ -114,10 +136,17 @@
     </div>
 
     <div class="container">
-        <section>
-            <h2>The Visionary</h2>
-            <p style="font-size: 1rem; font-weight: 700; color: #333;">I am <b>Shahin Aktar</b>, a 17-year-old student developer, professional editor, and creative strategist. <b>Al-Alsa</b> is my mission to integrate high-end technology into the spiritual lives of the Ummah.</p>
-            <button class="mission-btn play-btn" onclick="openQuiz()">EARN COINS: PLAY QUIZ <i class="fas fa-play" style="margin-left:10px;"></i></button>
+        <section id="prayer-section">
+            <h2 id="locationLabel">Prayer Times (Loading...)</h2>
+            <div class="prayer-times-grid">
+                <div class="p-time-box"><span>FAJR</span><b id="t-fajr">--:--</b></div>
+                <div class="p-time-box"><span>DHUHR</span><b id="t-dhuhr">--:--</b></div>
+                <div class="p-time-box"><span>ASR</span><b id="t-asr">--:--</b></div>
+                <div class="p-time-box"><span>MAGHRIB</span><b id="t-maghrib">--:--</b></div>
+                <div class="p-time-box"><span>ISHA</span><b id="t-isha">--:--</b></div>
+                <div class="p-time-box"><span>SUNRISE</span><b id="t-sunrise">--:--</b></div>
+            </div>
+            <small style="opacity: 0.5; font-weight: 700;">Automatic location detection active.</small>
         </section>
 
         <section id="missions">
@@ -127,6 +156,15 @@
             <button class="mission-btn" id="salah-asr" onclick="completeSalah('asr', this)">ASR <span>+1 🪙</span></button>
             <button class="mission-btn" id="salah-maghrib" onclick="completeSalah('maghrib', this)">MAGHRIB <span>+1 🪙</span></button>
             <button class="mission-btn" id="salah-isha" onclick="completeSalah('isha', this)">ISHA <span>+1 🪙</span></button>
+        </section>
+
+        <section id="leaderboard">
+            <h2>Ummah Leaders</h2>
+            <table class="leaderboard-table">
+                <tr><td class="rank">#1</td><td>Shahin Aktar (Admin)</td><td style="text-align:right">999 🪙</td></tr>
+                <tr><td class="rank">#2</td><td>Ahmad Khan</td><td style="text-align:right">450 🪙</td></tr>
+                <tr><td class="rank">#3</td><td>Fatima Zahra</td><td style="text-align:right">380 🪙</td></tr>
+            </table>
         </section>
 
         <section id="names">
@@ -151,7 +189,7 @@
     </footer>
 
     <script>
-        // 1. FIREBASE CONFIGURATION (INTEGRATED FROM YOUR PROVIDED ID)
+        // 1. FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyCUQblrFn3RHyy4sxqhA2Hz7Nq4gYosZT0",
             authDomain: "al-alsa.firebaseapp.com",
@@ -164,36 +202,6 @@
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-
-        // AUTH FUNCTIONS
-        function handleGoogleLogin() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then((result) => {
-                updateUI(result.user);
-            }).catch(err => alert("Login Error: " + err.message));
-        }
-
-        function handleLogout() {
-            auth.signOut().then(() => updateUI(null));
-        }
-
-        function updateUI(user) {
-            const nameEl = document.getElementById('userNameDisplay');
-            const loginBtn = document.getElementById('loginBtn');
-            const logoutBtn = document.getElementById('logoutBtn');
-
-            if (user) {
-                nameEl.innerText = "SALAM, " + user.displayName;
-                loginBtn.style.display = "none";
-                logoutBtn.style.display = "block";
-            } else {
-                nameEl.innerText = "";
-                loginBtn.style.display = "block";
-                logoutBtn.style.display = "none";
-            }
-        }
-
-        auth.onAuthStateChanged(updateUI);
 
         // 2. DATA POOLS
         const surahNames = ["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf"];
@@ -251,23 +259,72 @@
             {q:"Where did the Prophet receive first revelation?", a:["Cave Hira","Cave Thawr","Kaaba"], c:0}
         ];
 
-        const wisdoms = [
-            "Indeed, with hardship comes ease (94:6).", "The best among you are those who learn the Quran and teach it.", "So remember Me; I will remember you (2:152).", "A smile is charity.", "Allah does not burden a soul beyond that it can bear.", "Kindness is a mark of faith.", "The strong is not the one who overcomes people, but the one who controls his anger.", "Trust in Allah, but tie your camel.", "Allah loves those who turn to Him in repentance.", "Speak a good word or remain silent.",
-            "Forgive others as you would like Allah to forgive you.", "Your only limit is your soul.", "He who has no mercy will receive no mercy.", "Prayer is better than sleep.", "Truthfulness leads to righteousness.", "Modesty is part of faith.", "Allah is beautiful and loves beauty.", "Upper hand is better than the lower hand (giving vs receiving).", "Be in this world as a stranger or a traveler.", "Righteousness is good character.",
-            "Avoid jealousy, for it eats up good deeds.", "The best Jihad is to speak truth to a tyrant.", "Cleanliness is half of faith.", "Every act of kindness is charity.", "Allah is with the patient (2:153).", "Fear Allah wherever you are.", "Riches are not from abundance of goods but from a contented mind.", "Follow a bad deed with a good one to wipe it out.", "Paradise lies at the feet of mothers.", "A father gives his child nothing better than good manners."
-        ];
+        const wisdoms = ["Indeed, with hardship comes ease (94:6).", "The best among you are those who learn the Quran and teach it.", "So remember Me; I will remember you (2:152).", "A smile is charity.", "Allah does not burden a soul beyond that it can bear.", "Kindness is a mark of faith.", "The strong is not the one who overcomes people, but the one who controls his anger.", "Trust in Allah, but tie your camel.", "Allah loves those who turn to Him in repentance.", "Speak a good word or remain silent.", "Forgive others as you would like Allah to forgive you.", "Your only limit is your soul.", "He who has no mercy will receive no mercy.", "Prayer is better than sleep.", "Truthfulness leads to righteousness.", "Modesty is part of faith.", "Allah is beautiful and loves beauty.", "Upper hand is better than the lower hand.", "Be in this world as a stranger.", "Righteousness is good character.", "Avoid jealousy.", "The best Jihad is truth to a tyrant.", "Cleanliness is half of faith.", "Every act of kindness is charity.", "Allah is with the patient.", "Fear Allah wherever you are.", "Riches are from a contented mind.", "Follow a bad deed with a good one.", "Paradise lies at the feet of mothers.", "A father gives nothing better than manners."];
 
-        // 3. LOGIC
-        let userData = JSON.parse(localStorage.getItem('alsa_v9')) || { 
+        // 3. LOGIC & NEW FUNCTIONS
+        let userData = JSON.parse(localStorage.getItem('alsa_v10')) || { 
             coins: 0, 
             lastClaimDate: "", 
-            claimedSalah: [] 
+            claimedSalah: [],
+            tasbih: 0
         };
 
         function save() { 
-            localStorage.setItem('alsa_v9', JSON.stringify(userData));
+            localStorage.setItem('alsa_v10', JSON.stringify(userData));
             document.getElementById('coinCount').innerText = userData.coins;
         }
+
+        // Feature: Digital Tasbih
+        function countTasbih() {
+            userData.tasbih++;
+            if(userData.tasbih % 33 === 0) {
+                userData.coins += 1;
+                showCoinAnimation();
+            }
+            document.getElementById('tasbihDisplay').innerText = userData.tasbih;
+            save();
+        }
+        function resetTasbih() { userData.tasbih = 0; document.getElementById('tasbihDisplay').innerText = 0; save(); }
+        function openTasbih() { toggleMenu(); document.getElementById('tasbihPanel').style.display = 'flex'; }
+        function closeTasbih() { document.getElementById('tasbihPanel').style.display = 'none'; }
+
+        // Feature: Real Prayer Times API
+        async function fetchPrayerTimes() {
+            try {
+                const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej));
+                const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=2`);
+                const data = await res.json();
+                const times = data.data.timings;
+                document.getElementById('t-fajr').innerText = times.Fajr;
+                document.getElementById('t-dhuhr').innerText = times.Dhuhr;
+                document.getElementById('t-asr').innerText = times.Asr;
+                document.getElementById('t-maghrib').innerText = times.Maghrib;
+                document.getElementById('t-isha').innerText = times.Isha;
+                document.getElementById('t-sunrise').innerText = times.Sunrise;
+                document.getElementById('locationLabel').innerText = "Prayer Times (Live)";
+            } catch (e) {
+                document.getElementById('locationLabel').innerText = "Prayer Times (Default)";
+            }
+        }
+
+        // AUTH & UI
+        function handleGoogleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => updateUI(result.user)).catch(err => alert("Login Error: " + err.message));
+        }
+        function handleLogout() { auth.signOut().then(() => updateUI(null)); }
+        function updateUI(user) {
+            const nameEl = document.getElementById('userNameDisplay');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (user) {
+                nameEl.innerText = "SALAM, " + user.displayName;
+                loginBtn.style.display = "none"; logoutBtn.style.display = "block";
+            } else {
+                nameEl.innerText = ""; loginBtn.style.display = "block"; logoutBtn.style.display = "none";
+            }
+        }
+        auth.onAuthStateChanged(updateUI);
 
         function checkDailyReset() {
             const today = new Date().toDateString();
@@ -300,19 +357,14 @@
 
         window.onload = () => {
             checkDailyReset();
+            fetchPrayerTimes();
+            document.getElementById('tasbihDisplay').innerText = userData.tasbih;
             
             const sList = document.getElementById('surahList');
             for(let i=1; i<=50; i++) {
                 let id = i.toString().padStart(3, '0');
                 let name = surahNames[i-1] || `Surah ${i}`;
-                sList.innerHTML += `
-                <div class="surah-card">
-                    <div class="surah-info">
-                        <b>${i}. ${name}</b>
-                        <span class="surah-name-ar">سورة</span>
-                    </div>
-                    <audio controls preload="none" src="https://server8.mp3quran.net/afs/${id}.mp3"></audio>
-                </div>`;
+                sList.innerHTML += `<div class="surah-card"><div class="surah-info"><b>${i}. ${name}</b><span class="surah-name-ar">سورة</span></div><audio controls preload="none" src="https://server8.mp3quran.net/afs/${id}.mp3"></audio></div>`;
             }
 
             const qList = document.getElementById('quoteList');
@@ -344,16 +396,12 @@
 
         function checkQuiz(choice, correct, btn) {
             if(choice === correct) {
-                btn.style.background = "#34c759";
-                btn.style.color = "white";
-                userData.coins += 1;
-                showCoinAnimation();
-                save();
+                btn.style.background = "#34c759"; btn.style.color = "white";
+                userData.coins += 1; showCoinAnimation(); save();
                 setTimeout(loadNewQuestion, 800);
             } else {
-                btn.style.background = "#ff3b30";
-                btn.style.color = "white";
-                setTimeout(() => btn.style.background = "#f2f2f7", 500);
+                btn.style.background = "#ff3b30"; btn.style.color = "white";
+                setTimeout(() => { btn.style.background = "#f2f2f7"; btn.style.color = "var(--emerald)"; }, 500);
             }
         }
 
