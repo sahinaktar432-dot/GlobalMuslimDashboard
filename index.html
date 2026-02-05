@@ -60,6 +60,16 @@
         section { background: var(--white); padding: 25px; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
         h2 { font-size: 1.3rem; font-weight: 900; color: var(--emerald); margin-bottom: 15px; letter-spacing: -0.5px; }
 
+        /* PRAYER TIMES GRID (UPDATED) */
+        .prayer-times-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .p-time-box {
+            background: #fcfcfc; border: 1px solid #eee; padding: 15px 5px;
+            border-radius: 18px; text-align: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .p-time-box span { font-size: 0.75rem; font-weight: 800; color: #888; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
+        .p-time-box b { font-size: 1.15rem; font-weight: 900; color: var(--emerald); font-family: 'Inter', sans-serif; }
+
         /* BUTTONS */
         .mission-btn, .quiz-opt { 
             width: 100%; padding: 18px; margin-bottom: 12px; border-radius: 20px; 
@@ -115,6 +125,10 @@
         .leaderboard-table tr { border-bottom: 1px solid #eee; }
         .leaderboard-table td { padding: 15px 5px; font-size: 0.95rem; font-weight: 700; }
         .rank-cell { font-weight: 900; font-size: 1.2rem; width: 40px; }
+
+        /* FOOTER SOCIALS */
+        .social-link { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #eee; border-radius: 50%; color: var(--emerald); font-size: 1.2rem; text-decoration: none; transition: 0.2s; }
+        .social-link:active { transform: scale(0.9); background: var(--gold); color: white; }
     </style>
 </head>
 <body>
@@ -209,13 +223,13 @@
     <div class="container">
         <section id="prayer-section">
             <h2 id="locationLabel">Prayer Times (Live)</h2>
-            <div class="prayer-times-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                <div class="p-time-box" style="background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee;"><span>FAJR</span><b id="t-fajr" style="color:var(--emerald);">--:--</b></div>
-                <div class="p-time-box" style="background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee;"><span>DHUHR</span><b id="t-dhuhr" style="color:var(--emerald);">--:--</b></div>
-                <div class="p-time-box" style="background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee;"><span>ASR</span><b id="t-asr" style="color:var(--emerald);">--:--</b></div>
-                <div class="p-time-box" style="background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee;"><span>MAGHRIB</span><b id="t-maghrib" style="color:var(--emerald);">--:--</b></div>
-                <div class="p-time-box" style="background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee;"><span>ISHA</span><b id="t-isha" style="color:var(--emerald);">--:--</b></div>
-                <div class="p-time-box" style="background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee;"><span>SUNRISE</span><b id="t-sunrise" style="color:var(--emerald);">--:--</b></div>
+            <div class="prayer-times-grid">
+                <div class="p-time-box"><span>FAJR</span><b id="t-fajr">--:--</b></div>
+                <div class="p-time-box"><span>DHUHR</span><b id="t-dhuhr">--:--</b></div>
+                <div class="p-time-box"><span>ASR</span><b id="t-asr">--:--</b></div>
+                <div class="p-time-box"><span>MAGHRIB</span><b id="t-maghrib">--:--</b></div>
+                <div class="p-time-box"><span>ISHA</span><b id="t-isha">--:--</b></div>
+                <div class="p-time-box"><span>SUNRISE</span><b id="t-sunrise">--:--</b></div>
             </div>
         </section>
 
@@ -246,7 +260,12 @@
 
     <footer style="text-align: center; padding: 40px 20px; border-top: 1px solid #eee;">
         <h2 style="color:var(--emerald)">AL-ALSA</h2>
-        <p style="font-size: 0.8rem; font-weight: 800; opacity: 0.5; margin-bottom: 10px;">SHAHIN AKTAR • STUDENT DEVELOPER & EDITOR • 2026</p>
+        <p style="font-size: 0.8rem; font-weight: 800; opacity: 0.5; margin-bottom: 15px;">SHAHIN AKTAR • STUDENT DEVELOPER & EDITOR • 2026</p>
+        
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <a href="https://www.linkedin.com/in/shahin-aktar-15b4a1272?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+            <a href="mailto:business.aktar77@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
+        </div>
     </footer>
 
     <script>
@@ -259,7 +278,6 @@
         // 2. DATA CONSTANTS
         const surahNames = ["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf"];
         
-        // Full expanded array as requested
         const allahNames = [
             {ar:"الله", en:"Allah"}, {ar:"الرحمن", en:"Ar-Rahman"}, {ar:"الرحيم", en:"Ar-Rahim"}, {ar:"الملك", en:"Al-Malik"}, {ar:"القدوس", en:"Al-Quddus"}, {ar:"السلام", en:"As-Salam"}, {ar:"المؤمن", en:"Al-Mu'min"}, {ar:"المهيمن", en:"Al-Muhaymin"}, {ar:"العزيز", en:"Al-Aziz"}, {ar:"الجبار", en:"Al-Jabbar"}, {ar:"المتكبر", en:"Al-Mutakabbir"}, {ar:"الخالق", en:"Al-Khaliq"}, {ar:"البارئ", en:"Al-Bari"}, {ar:"المصور", en:"Al-Musawwir"}, {ar:"الغفار", en:"Al-Ghaffar"}, {ar:"القهار", en:"Al-Qahhar"}, {ar:"الوهاب", en:"Al-Wahhab"}, {ar:"الرزاق", en:"Ar-Razzaq"}, {ar:"الفتاح", en:"Al-Fattah"}, {ar:"العليم", en:"Al-Alim"}, {ar:"القابض", en:"Al-Qabid"}, {ar:"الباسط", en:"Al-Basit"}, {ar:"الخافض", en:"Al-Khafid"}, {ar:"الرافع", en:"Ar-Rafi"}, {ar:"المعز", en:"Al-Mu'izz"}, {ar:"المذل", en:"Al-Mudhill"}, {ar:"السميع", en:"As-Sami"}, {ar:"البصير", en:"Al-Basir"}, {ar:"الحكم", en:"Al-Hakam"}, {ar:"العدل", en:"Al-Adl"}, {ar:"اللطيف", en:"Al-Latif"}, {ar:"الخبير", en:"Al-Khabir"}, {ar:"الحليم", en:"Al-Halim"}, {ar:"العظيم", en:"Al-Azim"}, {ar:"الغفور", en:"Al-Ghafur"}, {ar:"الشكور", en:"Ash-Shakur"}, {ar:"العلي", en:"Al-Ali"}, {ar:"الكبير", en:"Al-Kabir"}, {ar:"الحفيظ", en:"Al-Hafiz"}, {ar:"المقيت", en:"Al-Muqit"}, {ar:"الحسيب", en:"Al-Hasib"}, {ar:"الجليل", en:"Al-Jalil"}, {ar:"الكريم", en:"Al-Karim"}, {ar:"الرقيب", en:"Ar-Raqib"}, {ar:"المجيب", en:"Al-Mujib"}, {ar:"الواسع", en:"Al-Wasi"}, {ar:"الحكيم", en:"Al-Hakim"}, {ar:"الودود", en:"Al-Wadud"}, {ar:"المجيد", en:"Al-Majid"}, {ar:"الباعث", en:"Al-Ba'ith"}, {ar:"الشهيد", en:"Ash-Shahid"}, {ar:"الحق", en:"Al-Haqq"}, {ar:"الوكيل", en:"Al-Wakil"}, {ar:"القوي", en:"Al-Qawiy"}, {ar:"المتين", en:"Al-Matin"}, {ar:"الولي", en:"Al-Wali"}, {ar:"الحميد", en:"Al-Hamid"}, {ar:"المحصي", en:"Al-Muhsi"}, {ar:"المبدئ", en:"Al-Mubdi"}, {ar:"المعيد", en:"Al-Mu'id"}, {ar:"المحيي", en:"Al-Muhyi"}, {ar:"المميت", en:"Al-Mumit"}, {ar:"الحي", en:"Al-Hayy"}, {ar:"القيوم", en:"Al-Qayyum"}, {ar:"الواجد", en:"Al-Wajid"}, {ar:"الماجد", en:"Al-Majid"}, {ar:"الواحد", en:"Al-Wahid"}, {ar:"الأحد", en:"Al-Ahad"}, {ar:"الصمد", en:"As-Samad"}, {ar:"القادر", en:"Al-Qadir"}, {ar:"المقتدر", en:"Al-Muqtadir"}, {ar:"المقدم", en:"Al-Muqaddim"}, {ar:"المؤخر", en:"Al-Mu'akhkhir"}, {ar:"الأول", en:"Al-Awwal"}, {ar:"الآخر", en:"Al-Akhir"}, {ar:"الظاهر", en:"Az-Zahir"}, {ar:"الباطن", en:"Al-Batin"}, {ar:"الوالي", en:"Al-Wali"}, {ar:"المتعالي", en:"Al-Muta'ali"}, {ar:"البر", en:"Al-Barr"}, {ar:"التواب", en:"At-Tawwab"}, {ar:"المنتقم", en:"Al-Muntaqim"}, {ar:"العفو", en:"Al-Afu"}, {ar:"الرؤوف", en:"Ar-Ra'uf"}, {ar:"مالك الملك", en:"Malik-ul-Mulk"}, {ar:"ذو الجلال والإكرام", en:"Zul-Jalali wal-Ikram"}, {ar:"المقسط", en:"Al-Muqsit"}, {ar:"الجامع", en:"Al-Jami"}, {ar:"الغني", en:"Al-Ghani"}, {ar:"المغني", en:"Al-Mughni"}, {ar:"المانع", en:"Al-Mani"}, {ar:"الضار", en:"Ad-Darr"}, {ar:"النافع", en:"An-Nafi"}, {ar:"النور", en:"An-Nur"}, {ar:"الهادي", en:"Al-Hadi"}, {ar:"البديع", en:"Al-Badi"}, {ar:"الباقي", en:"Al-Baqi"}, {ar:"الوارث", en:"Al-Warith"}, {ar:"الرشيد", en:"Ar-Rashid"}, {ar:"الصبور", en:"As-Sabur"}
         ];
@@ -400,10 +418,12 @@
                     return;
                 }
                 lbBody.innerHTML = leaders.map((leader, index) => {
-                    let badge = `#${index + 1}`;
+                    // Logic updated: Top 3 get medals, rest get plain numbers
+                    let badge = index + 1;
                     if(index === 0) badge = "🥇";
                     if(index === 1) badge = "🥈";
                     if(index === 2) badge = "🥉";
+                    
                     return `<tr><td class="rank-cell">${badge}</td><td>${leader.name || "Anonymous"}</td><td style="text-align:right">${(leader.coins || 0).toLocaleString()} 🪙</td></tr>`;
                 }).join('');
             });
