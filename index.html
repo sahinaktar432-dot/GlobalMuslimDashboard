@@ -33,20 +33,47 @@
         }
         .panel-active { display: flex !important; opacity: 1 !important; transform: translateY(0) !important; }
 
-        /* PREMIUM MENU BUTTON STYLING (Google Style) */
+        /* NEW SLIDE-IN PAGE PANEL */
+        #readSurahPanel {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 5500; display: none; flex-direction: column;
+            overflow-y: auto; padding: 0;
+            opacity: 0; transform: translateX(100%);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .page-active { transform: translateX(0) !important; opacity: 1 !important; }
+
+        /* GLOBAL BUTTON UPGRADES (Professional Animations) */
+        .pro-menu-btn, .mission-btn, .quiz-opt {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .pro-menu-btn:hover, .mission-btn:hover, .quiz-opt:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .pro-menu-btn:active, .mission-btn:active, .quiz-opt:active {
+            transform: scale(0.96) translateY(0) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .mission-btn.done:hover {
+            box-shadow: 0 8px 25px rgba(52, 199, 89, 0.3);
+        }
+
         .pro-menu-btn {
             background: white; color: #444; padding: 18px; border-radius: 20px;
-            font-size: 1.1rem; font-weight: 800; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
-            cursor: pointer; transition: transform 0.2s; border: none; width: 100%; text-decoration: none;
+            font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
+            cursor: pointer; border: none; width: 100%; text-decoration: none;
         }
-        .pro-menu-btn:active { transform: scale(0.97); background: #f0f0f5; }
         .pro-menu-btn i { color: var(--emerald); font-size: 1.4rem; width: 30px; text-align: center; }
         .pro-menu-btn.google i { color: #4285F4; }
         .pro-menu-btn.logout { background: #ffe5e5; color: #d32f2f; }
         .pro-menu-btn.logout i { color: #d32f2f; }
 
-        .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 2.5rem; cursor: pointer; z-index: 6000; }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 2.5rem; cursor: pointer; z-index: 6000; transition: transform 0.2s; }
+        .close-btn:active { transform: scale(0.8); }
 
         /* HERO SECTION */
         .hero { background: linear-gradient(180deg, var(--emerald) 0%, #0a5c41 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
@@ -60,7 +87,7 @@
         section { background: var(--white); padding: 25px; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
         h2 { font-size: 1.3rem; font-weight: 900; color: var(--emerald); margin-bottom: 15px; letter-spacing: -0.5px; }
 
-        /* PRAYER TIMES GRID (UPDATED) */
+        /* PRAYER TIMES GRID */
         .prayer-times-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .p-time-box {
             background: #fcfcfc; border: 1px solid #eee; padding: 15px 5px;
@@ -75,20 +102,44 @@
             width: 100%; padding: 18px; margin-bottom: 12px; border-radius: 20px; 
             border: 1px solid #eee; background: #f8f9fb; font-weight: 900; 
             color: var(--emerald); display: flex; justify-content: space-between; 
-            align-items: center; cursor: pointer; transition: all 0.2s; 
+            align-items: center; cursor: pointer; 
         }
-        .mission-btn:active, .quiz-opt:active { transform: scale(0.96); }
-        .mission-btn.done { background: #34c759 !important; color: white !important; border-color: #34c759; box-shadow: 0 5px 15px rgba(52, 199, 89, 0.3); }
+        .mission-btn.done { background: #34c759 !important; color: white !important; border-color: #34c759; }
 
-        /* 99 NAMES GRID */
-        .names-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .name-box { background: #f8f9fa; padding: 15px; border-radius: 18px; border: 1px solid #eee; text-align: center; }
-        .name-box .ar { font-family: 'Amiri'; font-size: 1.5rem; color: var(--emerald); display: block; margin-bottom: 5px; }
-        .name-box .en { font-size: 0.8rem; font-weight: 800; color: var(--gold); text-transform: uppercase; }
+        /* QURAN READING GRID (NEW) */
+        .surah-grid { display: flex; flex-direction: column; gap: 15px; }
+        .surah-display-card {
+            background: #ffffff; border: 1px solid #f0f0f0; border-radius: 22px; padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .surah-display-card:hover {
+            transform: translateY(-4px); box-shadow: 0 12px 30px rgba(4, 57, 39, 0.08); border-color: rgba(4, 57, 39, 0.15);
+        }
+        .surah-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .surah-card-header .left { display: flex; align-items: center; gap: 15px; }
+        .s-num { 
+            background: rgba(4, 57, 39, 0.08); color: var(--emerald); width: 40px; height: 40px; 
+            display: flex; align-items: center; justify-content: center; border-radius: 50%; 
+            font-weight: 900; font-size: 0.95rem; 
+        }
+        .s-name { font-size: 1.15rem; font-weight: 800; color: var(--emerald); }
+        .s-name-ar { font-family: 'Amiri'; font-size: 1.4rem; color: var(--gold); }
+        .surah-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        
+        .surah-action-btn {
+            background: #f8f9fb; color: var(--emerald); padding: 12px 5px; border-radius: 14px;
+            font-size: 0.75rem; font-weight: 800; text-align: center; border: 1px solid #eee;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; text-transform: uppercase;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+        .surah-action-btn i { font-size: 1.1rem; }
+        .surah-action-btn:hover { background: var(--emerald); color: white; border-color: var(--emerald); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(4, 57, 39, 0.2); }
+        .surah-action-btn:active { transform: scale(0.95) translateY(0); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         /* WISDOM SLIDEBAR */
         .quote-scroll { height: 400px; overflow-y: auto; padding-right: 5px; scrollbar-width: thin; scrollbar-color: var(--gold) #eee; }
-        .q-card { padding: 20px; border-bottom: 1px solid #f0f0f0; border-left: 4px solid var(--gold); background: #fafafa; margin-bottom: 10px; border-radius: 0 15px 15px 0; }
+        .q-card { padding: 20px; border-bottom: 1px solid #f0f0f0; border-left: 4px solid var(--gold); background: #fafafa; margin-bottom: 10px; border-radius: 0 15px 15px 0; transition: transform 0.2s; }
+        .q-card:hover { transform: translateX(5px); }
         .q-card p { font-size: 1rem; font-weight: 700; color: #333; margin-bottom: 8px; line-height: 1.4; }
         .q-card span { font-size: 0.75rem; color: var(--emerald); font-weight: 900; text-transform: uppercase; }
 
@@ -116,18 +167,20 @@
             width: 240px; height: 240px; border: 12px solid var(--gold); border-radius: 50%; 
             margin: 40px auto; display: flex; align-items: center; justify-content: center; 
             font-size: 4rem; color: white; font-weight: 900; cursor: pointer; 
-            box-shadow: 0 0 30px rgba(197, 160, 33, 0.3); user-select: none; 
+            box-shadow: 0 0 30px rgba(197, 160, 33, 0.3); user-select: none; transition: all 0.2s;
         }
-        .tasbih-circle:active { transform: scale(0.95); background: rgba(255,255,255,0.05); }
+        .tasbih-circle:active { transform: scale(0.92); background: rgba(255,255,255,0.05); }
 
         /* LEADERBOARD TABLE */
         .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .leaderboard-table tr { border-bottom: 1px solid #eee; }
+        .leaderboard-table tr { border-bottom: 1px solid #eee; transition: background 0.2s; }
+        .leaderboard-table tr:hover { background: #f9f9f9; }
         .leaderboard-table td { padding: 15px 5px; font-size: 0.95rem; font-weight: 700; }
         .rank-cell { font-weight: 900; font-size: 1.2rem; width: 40px; }
 
         /* FOOTER SOCIALS */
         .social-link { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #eee; border-radius: 50%; color: var(--emerald); font-size: 1.2rem; text-decoration: none; transition: 0.2s; }
+        .social-link:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .social-link:active { transform: scale(0.9); background: var(--gold); color: white; }
     </style>
 </head>
@@ -146,7 +199,7 @@
         <div class="logo">AL-ALSA</div>
         <div style="display: flex; gap: 15px; align-items: center;">
             <div style="font-weight: 900; background: var(--gold); padding: 5px 12px; border-radius: 12px; font-size: 0.9rem;">🪙 <span id="coinCount">0</span></div>
-            <div onclick="toggleMenu()" style="color:white; cursor:pointer;"><i class="fas fa-bars-staggered" style="font-size: 1.5rem;"></i></div>
+            <div onclick="toggleMenu()" style="color:white; cursor:pointer; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'"><i class="fas fa-bars-staggered" style="font-size: 1.5rem;"></i></div>
         </div>
     </nav>
 
@@ -188,9 +241,24 @@
         </div>
     </div>
 
+    <div id="readSurahPanel">
+        <div style="background: var(--emerald); padding: 18px 20px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <i class="fas fa-arrow-left" onclick="closeReadSurah()" style="color: white; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.8)'" onmouseup="this.style.transform='scale(1)'"></i>
+            <h2 id="readingSurahTitle" style="color: var(--gold); margin: 0; font-family: 'Inter'; font-weight: 900; flex-grow: 1; text-align: center;">Surah</h2>
+            <div style="width: 24px;"></div> </div>
+        
+        <div style="padding: 40px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; background: var(--bg);">
+            <i class="fas fa-book-open" style="font-size: 5rem; color: var(--emerald); margin-bottom: 25px; opacity: 0.15;"></i>
+            <h3 style="color: var(--emerald); margin-bottom: 15px; font-family: 'Amiri'; font-size: 2rem;">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h3>
+            <p style="color: #666; line-height: 1.6; font-weight: 600; max-width: 400px;">The Arabic text, transliteration, and translation for <strong id="readingSurahNamePH" style="color: var(--emerald);"></strong> will load here.</p>
+            
+            <audio id="readingAudio" controls style="margin-top: 40px; width: 100%; max-width: 400px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); filter: invert(0); opacity: 1;"></audio>
+        </div>
+    </div>
+
     <div id="surahPanel">
         <div class="close-btn" onclick="closeSurahs()">×</div>
-        <h2 style="color: var(--gold); text-align: center; margin-bottom: 20px;">Noble Quran</h2>
+        <h2 style="color: var(--gold); text-align: center; margin-bottom: 20px;">Noble Quran (Audio)</h2>
         <div id="surahList"></div>
     </div>
 
@@ -242,14 +310,14 @@
             <button class="mission-btn" id="salah-isha" onclick="completeSalah('isha', this)">ISHA <span>+1 🪙</span></button>
         </section>
 
+        <section id="quran-reading">
+            <h2>Continue Reading Qur’an</h2>
+            <div class="surah-grid" id="quranGrid"></div>
+        </section>
+
         <section id="leaderboard">
             <h2>Global Ummah Leaders 🏆</h2>
             <table class="leaderboard-table" id="leaderboardBody"></table>
-        </section>
-
-        <section id="names">
-            <h2>99 Names of Allah</h2>
-            <div class="names-grid" id="namesGrid"></div>
         </section>
 
         <section id="quotes">
@@ -275,13 +343,22 @@
         const auth = firebase.auth();
         const db = firebase.database();
 
-        // 2. DATA CONSTANTS
-        const surahNames = ["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf"];
-        
-        const allahNames = [
-            {ar:"الله", en:"Allah"}, {ar:"الرحمن", en:"Ar-Rahman"}, {ar:"الرحيم", en:"Ar-Rahim"}, {ar:"الملك", en:"Al-Malik"}, {ar:"القدوس", en:"Al-Quddus"}, {ar:"السلام", en:"As-Salam"}, {ar:"المؤمن", en:"Al-Mu'min"}, {ar:"المهيمن", en:"Al-Muhaymin"}, {ar:"العزيز", en:"Al-Aziz"}, {ar:"الجبار", en:"Al-Jabbar"}, {ar:"المتكبر", en:"Al-Mutakabbir"}, {ar:"الخالق", en:"Al-Khaliq"}, {ar:"البارئ", en:"Al-Bari"}, {ar:"المصور", en:"Al-Musawwir"}, {ar:"الغفار", en:"Al-Ghaffar"}, {ar:"القهار", en:"Al-Qahhar"}, {ar:"الوهاب", en:"Al-Wahhab"}, {ar:"الرزاق", en:"Ar-Razzaq"}, {ar:"الفتاح", en:"Al-Fattah"}, {ar:"العليم", en:"Al-Alim"}, {ar:"القابض", en:"Al-Qabid"}, {ar:"الباسط", en:"Al-Basit"}, {ar:"الخافض", en:"Al-Khafid"}, {ar:"الرافع", en:"Ar-Rafi"}, {ar:"المعز", en:"Al-Mu'izz"}, {ar:"المذل", en:"Al-Mudhill"}, {ar:"السميع", en:"As-Sami"}, {ar:"البصير", en:"Al-Basir"}, {ar:"الحكم", en:"Al-Hakam"}, {ar:"العدل", en:"Al-Adl"}, {ar:"اللطيف", en:"Al-Latif"}, {ar:"الخبير", en:"Al-Khabir"}, {ar:"الحليم", en:"Al-Halim"}, {ar:"العظيم", en:"Al-Azim"}, {ar:"الغفور", en:"Al-Ghafur"}, {ar:"الشكور", en:"Ash-Shakur"}, {ar:"العلي", en:"Al-Ali"}, {ar:"الكبير", en:"Al-Kabir"}, {ar:"الحفيظ", en:"Al-Hafiz"}, {ar:"المقيت", en:"Al-Muqit"}, {ar:"الحسيب", en:"Al-Hasib"}, {ar:"الجليل", en:"Al-Jalil"}, {ar:"الكريم", en:"Al-Karim"}, {ar:"الرقيب", en:"Ar-Raqib"}, {ar:"المجيب", en:"Al-Mujib"}, {ar:"الواسع", en:"Al-Wasi"}, {ar:"الحكيم", en:"Al-Hakim"}, {ar:"الودود", en:"Al-Wadud"}, {ar:"المجيد", en:"Al-Majid"}, {ar:"الباعث", en:"Al-Ba'ith"}, {ar:"الشهيد", en:"Ash-Shahid"}, {ar:"الحق", en:"Al-Haqq"}, {ar:"الوكيل", en:"Al-Wakil"}, {ar:"القوي", en:"Al-Qawiy"}, {ar:"المتين", en:"Al-Matin"}, {ar:"الولي", en:"Al-Wali"}, {ar:"الحميد", en:"Al-Hamid"}, {ar:"المحصي", en:"Al-Muhsi"}, {ar:"المبدئ", en:"Al-Mubdi"}, {ar:"المعيد", en:"Al-Mu'id"}, {ar:"المحيي", en:"Al-Muhyi"}, {ar:"المميت", en:"Al-Mumit"}, {ar:"الحي", en:"Al-Hayy"}, {ar:"القيوم", en:"Al-Qayyum"}, {ar:"الواجد", en:"Al-Wajid"}, {ar:"الماجد", en:"Al-Majid"}, {ar:"الواحد", en:"Al-Wahid"}, {ar:"الأحد", en:"Al-Ahad"}, {ar:"الصمد", en:"As-Samad"}, {ar:"القادر", en:"Al-Qadir"}, {ar:"المقتدر", en:"Al-Muqtadir"}, {ar:"المقدم", en:"Al-Muqaddim"}, {ar:"المؤخر", en:"Al-Mu'akhkhir"}, {ar:"الأول", en:"Al-Awwal"}, {ar:"الآخر", en:"Al-Akhir"}, {ar:"الظاهر", en:"Az-Zahir"}, {ar:"الباطن", en:"Al-Batin"}, {ar:"الوالي", en:"Al-Wali"}, {ar:"المتعالي", en:"Al-Muta'ali"}, {ar:"البر", en:"Al-Barr"}, {ar:"التواب", en:"At-Tawwab"}, {ar:"المنتقم", en:"Al-Muntaqim"}, {ar:"العفو", en:"Al-Afu"}, {ar:"الرؤوف", en:"Ar-Ra'uf"}, {ar:"مالك الملك", en:"Malik-ul-Mulk"}, {ar:"ذو الجلال والإكرام", en:"Zul-Jalali wal-Ikram"}, {ar:"المقسط", en:"Al-Muqsit"}, {ar:"الجامع", en:"Al-Jami"}, {ar:"الغني", en:"Al-Ghani"}, {ar:"المغني", en:"Al-Mughni"}, {ar:"المانع", en:"Al-Mani"}, {ar:"الضار", en:"Ad-Darr"}, {ar:"النافع", en:"An-Nafi"}, {ar:"النور", en:"An-Nur"}, {ar:"الهادي", en:"Al-Hadi"}, {ar:"البديع", en:"Al-Badi"}, {ar:"الباقي", en:"Al-Baqi"}, {ar:"الوارث", en:"Al-Warith"}, {ar:"الرشيد", en:"Ar-Rashid"}, {ar:"الصبور", en:"As-Sabur"}
+        // 2. DATA CONSTANTS (UPDATED WITH ALL 114 SURAHS)
+        const surahNames = [
+            "Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", 
+            "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Ta-Ha", 
+            "Al-Anbiya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", 
+            "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", 
+            "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf",
+            "Ad-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah",
+            "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij",
+            "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba'", "An-Nazi'at", "'Abasa",
+            "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad",
+            "Ash-Shams", "Al-Layl", "Ad-Duhaa", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat",
+            "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr",
+            "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"
         ];
-
+        
         const wisdoms = ["Indeed, with hardship comes ease (94:6).", "The best among you are those who learn the Quran and teach it.", "So remember Me; I will remember you (2:152).", "A smile is charity.", "Allah does not burden a soul beyond that it can bear.", "Kindness is a mark of faith.", "The strong is not the one who overcomes people, but the one who controls his anger.", "Trust in Allah, but tie your camel.", "Allah loves those who turn to Him in repentance.", "Speak a good word or remain silent.", "Forgive others as you would like Allah to forgive you.", "Your only limit is your soul.", "He who has no mercy will receive no mercy.", "Prayer is better than sleep.", "Truthfulness leads to righteousness.", "Modesty is part of faith.", "Allah is beautiful and loves beauty.", "Upper hand is better than the lower hand.", "Be in this world as a stranger.", "Righteousness is good character.", "Avoid jealousy.", "The best Jihad is truth to a tyrant.", "Cleanliness is half of faith.", "Every act of kindness is charity.", "Allah is with the patient.", "Fear Allah wherever you are.", "Riches are from a contented mind.", "Follow a bad deed with a good one.", "Paradise lies at the feet of mothers.", "A father gives nothing better than manners.", "Silence is wisdom.", "Be patient for the Promise of Allah is true.", "Do not despair of the mercy of Allah.", "Good manners are the heaviest on the scale.", "The dunya is a prison for the believer.", "Sadaqah extinguishes sin like water extinguishes fire.", "Make dua, it is the weapon of the believer.", "Read Quran, for it comes as an intercessor.", "Stay close to Allah and He will stay close to you.", "Gratitude increases blessings.", "Anger begins with madness and ends with regret.", "Be like the flower that gives its fragrance to even the hand that crushes it."];
 
         const quizBank = [
@@ -329,6 +406,32 @@
         function closePanel(id) {
             const p = document.getElementById(id);
             p.classList.remove('panel-active'); setTimeout(() => p.style.display = 'none', 400);
+        }
+
+        // NEW PAGE LOGIC FOR SURAH READING
+        function openSurahDetail(num, name, audioId, mode) {
+            const panel = document.getElementById('readSurahPanel');
+            document.getElementById('readingSurahTitle').innerText = num + ". " + name;
+            document.getElementById('readingSurahNamePH').innerText = name;
+            
+            const audioEl = document.getElementById('readingAudio');
+            audioEl.src = `https://server8.mp3quran.net/afs/${audioId}.mp3`;
+            
+            if(mode === 'listen' || mode === 'continue') {
+                audioEl.play().catch(e => console.log("Audio autoplay prevented"));
+            } else {
+                audioEl.pause();
+            }
+            
+            panel.style.display = 'flex';
+            setTimeout(() => { panel.classList.add('page-active'); }, 10);
+        }
+
+        function closeReadSurah() {
+            const panel = document.getElementById('readSurahPanel');
+            document.getElementById('readingAudio').pause();
+            panel.classList.remove('page-active');
+            setTimeout(() => { panel.style.display = 'none'; }, 400); // Matches transition time
         }
 
         // COMING SOON POPUP LOGIC
@@ -406,7 +509,7 @@
             el.classList.remove('animate-coin'); void el.offsetWidth; el.classList.add('animate-coin');
         }
 
-        // UPGRADED LEADERBOARD RENDER
+        // LEADERBOARD RENDER
         function renderLeaderboard() {
             const lbBody = document.getElementById('leaderboardBody');
             db.ref('leaderboard').orderByChild('coins').limitToLast(10).on('value', (snapshot) => {
@@ -418,7 +521,6 @@
                     return;
                 }
                 lbBody.innerHTML = leaders.map((leader, index) => {
-                    // Logic updated: Top 3 get medals, rest get plain numbers
                     let badge = index + 1;
                     if(index === 0) badge = "🥇";
                     if(index === 1) badge = "🥈";
@@ -462,13 +564,41 @@
             document.getElementById('tasbihDisplay').innerText = userData.tasbih;
             setInterval(updateTimers, 60000);
             
-            // GENERATE 50 SURAHS
+            // GENERATE 114 SURAHS FOR AUDIO PANEL & NEW HOMEPAGE GRID
             const sList = document.getElementById('surahList');
-            for(let i=1; i<=50; i++) {
-                let id = i.toString().padStart(3, '0');
-                let name = surahNames[i-1] || `Surah ${i}`;
-                sList.innerHTML += `<div class="surah-card"><div class="surah-info"><b>${i}. ${name}</b><span class="surah-name-ar">سورة</span></div><audio controls preload="none" src="https://server8.mp3quran.net/afs/${id}.mp3"></audio></div>`;
-            }
+            const qGrid = document.getElementById('quranGrid');
+            
+            surahNames.forEach((name, index) => {
+                let num = index + 1;
+                let audioId = num.toString().padStart(3, '0');
+                
+                // 1. Populate old Audio panel
+                sList.innerHTML += `<div class="surah-card"><div class="surah-info"><b>${num}. ${name}</b><span class="surah-name-ar">سورة</span></div><audio controls preload="none" src="https://server8.mp3quran.net/afs/${audioId}.mp3"></audio></div>`;
+                
+                // 2. Populate NEW Continue Reading section on homepage
+                qGrid.innerHTML += `
+                    <div class="surah-display-card">
+                        <div class="surah-card-header">
+                            <div class="left">
+                                <div class="s-num">${num}</div>
+                                <div class="s-name">${name}</div>
+                            </div>
+                            <div class="s-name-ar">سورة</div>
+                        </div>
+                        <div class="surah-actions">
+                            <div class="surah-action-btn" onclick="openSurahDetail(${num}, '${name.replace(/'/g, "\\'")}', '${audioId}', 'read')">
+                                <i class="fas fa-book-open"></i> Read
+                            </div>
+                            <div class="surah-action-btn" onclick="openSurahDetail(${num}, '${name.replace(/'/g, "\\'")}', '${audioId}', 'listen')">
+                                <i class="fas fa-headphones"></i> Listen
+                            </div>
+                            <div class="surah-action-btn" onclick="openSurahDetail(${num}, '${name.replace(/'/g, "\\'")}', '${audioId}', 'continue')">
+                                <i class="fas fa-play"></i> Continue
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
 
             // GENERATE 100 WISDOMS IN SLIDEBAR
             const qList = document.getElementById('quoteList');
@@ -476,12 +606,6 @@
                 let text = wisdoms[(i-1) % wisdoms.length]; // Looping through array to get 100 items
                 qList.innerHTML += `<div class="q-card"><p>"${text}"</p><span>— Wisdom #${i}</span></div>`;
             }
-
-            // GENERATE 99 NAMES
-            const nGrid = document.getElementById('namesGrid');
-            allahNames.forEach(n => {
-                nGrid.innerHTML += `<div class="name-box"><span class="ar">${n.ar}</span><span class="en">${n.en}</span></div>`;
-            });
         };
     </script>
 </body>
